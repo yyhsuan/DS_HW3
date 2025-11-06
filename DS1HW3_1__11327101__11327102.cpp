@@ -25,6 +25,18 @@ class Stack {
 
 };
 
+void Start() {
+  std::cout << "*** (^_^) Data Structure (^o^) ***" << std::endl;
+  std::cout << "*** Find the Goal(s) in a Maze ***" << std::endl;
+  std::cout << "* 0. Quit                        *" << std::endl;
+  std::cout << "* 1. Find one goal               *" << std::endl;
+  std::cout << "* 2. Find goal(s) as requested   *" << std::endl;
+  std::cout << "* 3. How many goals?             *" << std::endl;
+  std::cout << "* 4. Shortest path to one goal   *" << std::endl;
+  std::cout << "**********************************" << std::endl;
+  std::cout << "Input a command: " << std::endl;
+}
+
 int main() {
 
 
@@ -32,6 +44,7 @@ int main() {
   return 0;
 
 }
+
 
 
 
