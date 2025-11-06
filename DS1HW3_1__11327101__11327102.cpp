@@ -4,9 +4,18 @@
 
 class Maze {
  private:
-  >##<
- public:
+  int row;
+  int column;
+  char *grid;
 
+ public:
+  void initial(int r, int c) {    // 看要不要改成建構子
+    row = r;
+    column = c;
+    grid = new char[row * column];
+  }
+
+>##<
 };
 
 class Stack {
@@ -23,5 +32,6 @@ int main() {
   return 0;
 
 }
+
 
 
