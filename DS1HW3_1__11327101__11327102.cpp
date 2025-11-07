@@ -8,13 +8,13 @@ class Maze {
  private:
   int row;
   int column;
-  char *grid;
+  char *grid; // 這是甚麼
 
  public:
   void initial(int r, int c) {    // 看要不要改成建構子
     row = r;
     column = c;
-    grid = new char[row * column];
+    grid = new char[row * column];    // 這是甚麼
   }
   
 };
@@ -58,3 +58,4 @@ int main() {
   return 0;
 
 }
+
