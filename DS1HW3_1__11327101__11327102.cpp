@@ -39,12 +39,13 @@ void Start() {
 }
 
 int main() {
-  ifstream infile("123.txt");
+  ifstream infile("123.txt"); // 測試讀檔 github不能run
 
 
   return 0;
 
 }
+
 
 
 
