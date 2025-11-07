@@ -1,7 +1,8 @@
 // 11327101陳怡瑄 11327102林姿妤
 
 #include <iostream>
-
+// 建立/寫入檔案	用 ofstream	ofstream file("a.txt")
+// 讀取檔案	用 ifstream	ifstream file("a.txt")
 class Maze {
  private:
   int row;
@@ -44,6 +45,7 @@ int main() {
   return 0;
 
 }
+
 
 
 
