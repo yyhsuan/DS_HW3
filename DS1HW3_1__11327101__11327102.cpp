@@ -8,13 +8,13 @@ class Maze {
  private:
   int row;
   int column;
-  char *grid; 
+  char *grid;
 
  public:
   void initial(int r, int c) {    // 看要不要改成建構子
     row = r;
     column = c;
-    grid = new char[row * column];   
+    grid = new char[row * column];
   }
   
 };
@@ -39,7 +39,7 @@ void Start() {
 }
 
 int main() {
-  std::ifstream infile("123.txt"); // 測試讀檔 github不能run
+  std::ifstream infile("301.txt"); // 測試讀檔 github不能run
   if ( infile ) {
     std::cout << " uuuuu " << std::endl;
     std::string line;  // ← 這裡宣告一個變數 line
@@ -50,13 +50,12 @@ int main() {
     */
     char c;
     while (infile.get(c)) {   // 每次讀一個字元到 c
-      std::cout << c << std::endl;            // 直接印出
+      std::cout << c;            // 直接印出
     }
+    infile.close();               // 關閉檔案
   }
 
 
   return 0;
 
 }
-
-
