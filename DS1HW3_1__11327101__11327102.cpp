@@ -42,8 +42,9 @@ int main() {
   std::ifstream infile("301.txt"); // 測試讀檔 github不能run
   if ( infile ) {
     std::cout << " uuuuu " << std::endl;
-    std::string line;  // ← 這裡宣告一個變數 line
     /*
+    std::string line;  // ← 這裡宣告一個變數 line
+    
     while (getline(infile, line)) {  // 讀取檔案的一行到 line
       std::cout << line << std::endl;        // 印出這一行
     }
@@ -59,3 +60,4 @@ int main() {
   return 0;
 
 }
+
