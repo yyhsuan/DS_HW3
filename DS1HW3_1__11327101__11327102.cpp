@@ -1,6 +1,5 @@
 // 11327101陳怡瑄 11327102林姿妤
-
-#include <fstream> // 建立/寫入檔案	讀取檔案
+#include <fstream>
 #include <iostream>
 #include <string>
 // 建立/寫入檔案	用 ofstream	ofstream file("a.txt")
@@ -40,21 +39,22 @@ void Start() {
 }
 
 int main() {
-  std::ifstream infile("123.txt"); // 測試讀檔 github不能run 成功
-
+  std::ifstream infile("123.txt"); // 測試讀檔 github不能run
   if ( infile ) {
-    std::cout << " uuuuu ";
+    std::cout << " uuuuu " << std::endl;
+    std::string line;  // ← 這裡宣告一個變數 line
+    /*
+    while (getline(infile, line)) {  // 讀取檔案的一行到 line
+      std::cout << line << std::endl;        // 印出這一行
+    }
+    */
+    char c;
+    while (infile.get(c)) {   // 每次讀一個字元到 c
+      std::cout << c << std::endl;            // 直接印出
+    }
   }
 
 
   return 0;
 
 }
-
-
-
-
-
-
-
-
