@@ -1,6 +1,8 @@
 // 11327101陳怡瑄 11327102林姿妤
 
+#include <fstream> // 建立/寫入檔案	讀取檔案
 #include <iostream>
+#include <string>
 // 建立/寫入檔案	用 ofstream	ofstream file("a.txt")
 // 讀取檔案	用 ifstream	ifstream file("a.txt")
 class Maze {
@@ -15,8 +17,7 @@ class Maze {
     column = c;
     grid = new char[row * column];
   }
-
->##<
+  
 };
 
 class Stack {
@@ -39,12 +40,17 @@ void Start() {
 }
 
 int main() {
-  ifstream infile("123.txt"); // 測試讀檔 github不能run
+  std::ifstream infile("123.txt"); // 測試讀檔 github不能run 成功
+
+  if ( infile ) {
+    std::cout << " uuuuu ";
+  }
 
 
   return 0;
 
 }
+
 
 
 
