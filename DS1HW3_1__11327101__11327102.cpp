@@ -39,12 +39,13 @@ void Start() {
 }
 
 int main() {
-
+  ifstream infile("123.txt");
 
 
   return 0;
 
 }
+
 
 
 
