@@ -14,7 +14,7 @@ class Maze {
   void initial(int r, int c) {    // 看要不要改成建構子
     row = r;
     column = c;
-    grid = new char[row * column];
+    grid = new char[row * column];  // 這不知道對不對 反正要有上面那兩個?
   }
   
 };
@@ -60,4 +60,5 @@ int main() {
   return 0;
 
 }
+
 
