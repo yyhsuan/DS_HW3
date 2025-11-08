@@ -51,6 +51,11 @@ class Maze {
 
 class Stack {
  private:
+  struct Node{
+    int row;
+    int column;
+    Node next;
+  }
  
  public:
 
@@ -87,6 +92,7 @@ int main() {
   return 0;
 
 }
+
 
 
 
