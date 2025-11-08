@@ -55,12 +55,19 @@ class Stack {
     int row;
     int column;
     Node next;
+
+    Node(int r, int c) { // Node的建構子
+      row = r;
+      column = c;
+      next = NULL;
+    }
   }
   Node *head;
  
  public:
   Stack() {
-    head = NULL;
+    Node *first/ = Node(0,0); // （最左邊上面的那一格）
+    head = first;
   }
 
 };
@@ -96,6 +103,7 @@ int main() {
   return 0;
 
 }
+
 
 
 
