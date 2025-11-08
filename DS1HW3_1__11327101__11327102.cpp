@@ -202,9 +202,9 @@ class Maze {
   bool Go() {
     Stack s;
     Stack back; // 存走過的
-    bool yes = false;
+    bool yes = false; // 和走過的r c 相同
     int r = 0, c = 0;
-    bool have_go = false;
+    bool have_go = false; // 找到g
     s.push(r, c);
     Setgrid(r, c, 'V');
     while (true) {
@@ -296,6 +296,7 @@ int main() {
   return 0;
 
 }
+
 
 
 
