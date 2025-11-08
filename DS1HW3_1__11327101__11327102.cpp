@@ -26,7 +26,9 @@ class Stack {
     // 對
     head = first;
   }
-
+  bool empty() {
+    return head == nullptr;
+  }
   void push(int r, int c) { 
     Node *newNode = new Node(r, c); 
     newNode->next = head; 
@@ -204,6 +206,7 @@ int main() {
   return 0;
 
 }
+
 
 
 
