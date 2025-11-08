@@ -56,8 +56,12 @@ class Stack {
     int column;
     Node next;
   }
+  Node *head;
  
  public:
+  Stack() {
+    head = NULL;
+  }
 
 };
 
@@ -92,6 +96,7 @@ int main() {
   return 0;
 
 }
+
 
 
 
