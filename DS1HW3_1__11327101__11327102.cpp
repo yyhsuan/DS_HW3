@@ -42,7 +42,15 @@ class Maze {
       std::cout << "\n";
     }
   }
-  
+
+  char Getgrid(int r, int c) { // 取得這格的東西
+    return grid[r * column + c];
+  }
+
+  void Setgrid(int r, int c, char letter) { // 改這格的字母(走過改V,路徑改R)
+    grid[r * column + c] = letter; 
+  }
+
 };
 
 class Stack {
@@ -101,6 +109,7 @@ int main() {
   return 0;
 
 }
+
 
 
 
