@@ -25,9 +25,7 @@ class Maze {
       if ( ch != '\n' ) {
         grid[r * column + c] = ch;
         c++;
-      }
-
-      else {
+      } else {
         r++;
         c = 0;
       }       
@@ -104,6 +102,7 @@ int main() {
   return 0;
 
 }
+
 
 
 
