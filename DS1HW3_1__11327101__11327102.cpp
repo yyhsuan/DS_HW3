@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 // 建立/寫入檔案	用 ofstream	ofstream file("a.txt")
-// 讀取檔案	用 ifstream	ifstream file("a.txt")
+// 讀取檔https://ieet2022survey3.cycu.edu.tw/MySurvey案	用 ifstream	ifstream file("a.txt")
 class Maze {
  private:
   int row;
@@ -51,17 +51,43 @@ class Maze {
     grid[r * column + c] = letter; 
   }
 
-  bool GoLeft(int &r, int &c, Stack &s) { // r c 放目前的位置 ，向左到撞牆 direction走的方向
-   while (c - 1 >= 0 && grid[r * column + (c - 1)] != 'O') {
-     if (grid[r * column + c] == 'G') { // 到終點
-       return true;
+  bool GoLeft(int &r, int &c, Stack &s) { // r c 放目前的位置
+    while (c - 1 >= 0 && grid[r * column + (c - 1)] != 'O') {
+      if (grid[r * column + c] == 'G') { // 到終點
+        return true;
+      }
+      c--;                 
+      s.push(r, c);
+      Setgrid(r, c, ‘V’);
      }
-     c--;                 
-     s.push(r, c);
-     Setgrid(r, c, ‘V’);
-   }
-    return false;
+     if (c == 0 && grid[r * column + c] != 'O') {
+       if (grid[r * column + c] == 'G') {
+         return true;
+       }
+       s.push(r, c);
+       Setgrid(r, c, 'V');
+     }
+     return false;
   }
+
+  bool GoRight(int &r, int &c, Stack &s) { // r c 放目前的位置 ，向左到撞牆 direction走的方向
+    while (c + 1 >= column - 1 && grid[r * column + (c + 1)] != 'O') {
+      if (grid[r * column + c] == 'G') { // 到終點
+        return true;
+      }
+      c++;                 
+      s.push(r, c);
+      Setgrid(r, c, ‘V’);
+     }
+     if ( c == column - 1 && grid[r * column + c] != 'O' ) {
+       if (grid[r * column + c] == 'G') {
+         return true;
+       }
+       s.push(r, c);
+       Setgrid(r, c, 'V');
+     }
+     return false;
+   }
 
 };
 
@@ -134,6 +160,7 @@ int main() {
   return 0;
 
 }
+
 
 
 
