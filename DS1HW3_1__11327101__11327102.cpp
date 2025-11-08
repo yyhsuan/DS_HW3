@@ -78,8 +78,8 @@ class Maze {
       c++;                 
       s.push(r, c);
       Setgrid(r, c, ‘V’);
-     }
-     if ( c == column - 1 && grid[r * column + c] != 'O' ) {
+    }
+    if ( c == column - 1 && grid[r * column + c] != 'O' ) {
        if (grid[r * column + c] == 'G') {
          return true;
        }
@@ -87,7 +87,7 @@ class Maze {
        Setgrid(r, c, 'V');
      }
      return false;
-   }
+  }
 
 };
 
@@ -160,6 +160,7 @@ int main() {
   return 0;
 
 }
+
 
 
 
