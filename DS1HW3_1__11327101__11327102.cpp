@@ -93,7 +93,7 @@ class Maze {
     grid[r * column + c] = letter; 
   }
 
-    bool GoLeft(int &r, int &c, Stack &s, Stack &back) { // r c 放目前的位置
+  bool GoLeft(int &r, int &c, Stack &s, Stack &back) { // r c 放目前的位置
     int count = 0;
     while (c - 1 >= 0 && grid[r * column + (c - 1)] != 'O') {
       if (grid[r * column + c - 1 ] == 'G') { // 到終點
@@ -102,16 +102,6 @@ class Maze {
       }
       count++;
       c--;      
-      s.push(r, c);
-      back.push(r, c);
-      Setgrid(r, c, 'V');
-    }
-    if (c == 0 && grid[r * column + c] != 'O') {
-      if (grid[r * column + c] == 'G') {
-        count++;
-        return true;
-      }
-      count++;
       s.push(r, c);
       back.push(r, c);
       Setgrid(r, c, 'V');
@@ -138,15 +128,6 @@ class Maze {
       back.push(r, c);
       Setgrid(r, c, 'V');
     }
-    if ( c == column - 1 && grid[r * column + c] != 'O' ) {
-      if (grid[r * column + c] == 'G') {
-        count++;
-        return true;
-      }
-      s.push(r, c);
-      back.push(r, c);
-      Setgrid(r, c, 'V');
-    }
     if ( count > 0 ) {
       return true;
     }
@@ -168,16 +149,6 @@ class Maze {
       back.push(r, c);
       Setgrid(r, c, 'V');
     }
-    if (r == 0 && grid[r * column + c] != 'O') {
-      if (grid[r * column + c] == 'G') {
-        count++;
-        return true;
-      }
-      count++;
-      s.push(r, c);
-      back.push(r, c);
-      Setgrid(r, c, 'V');
-    }
     if ( count > 0 ) {
       return true;
     }
@@ -195,16 +166,6 @@ class Maze {
       }
       count++;
       r++;
-      s.push(r, c);
-      back.push(r, c);
-      Setgrid(r, c, 'V');
-    }
-    if (r == row - 1 && grid[r * column + c] != 'O') {
-      if (grid[r * column + c] == 'G') {
-        count++;
-        return true;
-      }
-      count++;
       s.push(r, c);
       back.push(r, c);
       Setgrid(r, c, 'V');
@@ -267,6 +228,7 @@ int main() {
   return 0;
 
 }
+
 
 
 
