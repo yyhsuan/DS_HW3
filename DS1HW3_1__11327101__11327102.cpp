@@ -42,6 +42,17 @@ class Stack {
     delete temp;
   }
 
+  bool IsSame(int r, int c) {
+    Node *temp = head;
+    while ( temp != NULL ) {
+      if ( temp->row == r && temp->column == c ) {
+        return true;
+      }
+      temp = temp->next;
+    }
+    return false;
+  }
+
 };
 
 class Maze {
@@ -188,6 +199,63 @@ class Maze {
     }
   }
 
+  bool Go() {
+    Stack s;
+    Stack back; // 存走過的
+    bool yes = false;
+    int r = 0, c = 0;
+    bool have_go = false;
+    s.push(r, c);
+    Setgrid(r, c, 'V');
+    while (true) {
+      bool move = false;
+      if ( !yes ) {
+        if (GoRight(r, c, s, back)) { 
+          move = true; 
+          yes = back.IsSame(r, c);
+          if ( grid[r * column + c + 1] == 'G' ) {
+            have_go = true;
+            break;
+          }
+        }
+      }
+      if ( !yes ) {
+        if (GoDown(r, c, s, back)) { 
+          move = true;
+          yes = back.IsSame(r, c);
+          if ( grid[(r + 1) * column + c] == 'G' ) {
+            have_go = true;
+            break;
+          }
+        }
+      }
+      if ( !yes ) {
+        if (GoLeft(r, c, s, back)) { 
+          move = true;
+          yes = back.IsSame(r, c);
+          if ( grid[r * column + c - 1] == 'G' ) {
+            have_go = true;
+            break;
+          }
+        }
+      }
+      if ( !yes ) {
+        if (GoUp(r, c, s, back)) { 
+          move = true;
+          yes = back.IsSame(r, c);
+          if ( grid[(r - 1) * column + c] == 'G' ) {
+            have_go = true;
+            break;
+          }
+        }
+      }
+      if (!move) {// 回上一格
+        s.pop(r, c);
+      }
+    }
+    return have_go;
+  }
+
 };
 
 void Start() {
@@ -219,7 +287,7 @@ int main() {
     Stack s; // 測試上下左右
     int r = 0;
     int c = 0;
-    bool yes = a.GoRight(r, c, s);
+    bool yes = a.Go();
     a.print();
     infile.close();               // 關閉檔案
   }
@@ -228,6 +296,7 @@ int main() {
   return 0;
 
 }
+
 
 
 
