@@ -51,7 +51,7 @@ class Maze {
     grid[r * column + c] = letter; 
   }
 
-  bool GoLeft(int r, int c, int &direction, Stuck &s) { // r c 放目前的位置 ，向左到撞牆 direction走的方向
+  bool GoLeft(int &r, int &c, int &direction, Stuck &s) { // r c 放目前的位置 ，向左到撞牆 direction走的方向
     while( grid[r * column + c] != 'O' ) { // 右1 下2 左3 上4
       if ( grid[r * column + c] == 'G' ) { // 到終點
         return true; // 找到了
@@ -137,6 +137,7 @@ int main() {
   return 0;
 
 }
+
 
 
 
