@@ -33,16 +33,14 @@ class Maze {
     return;
   }
 
+  // print我有修一下 不對再改回去
   void print() { // 印出迷宮資料
     for (int r = 0; r < row; r++) {
       for (int c = 0; c < column; c++) {
         std::cout << grid[r * column + c];
-    }
-      if ( r > 0 ) {
-        std::cout << "\n";
       }
+      std::cout << "\n";
     }
-    return;
   }
   
 };
@@ -102,6 +100,7 @@ int main() {
   return 0;
 
 }
+
 
 
 
