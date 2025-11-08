@@ -59,13 +59,13 @@ class Stack {
       column = c;
       next = NULL;
     }
-  }
+  };
   Node *head;
  
  public:
   Stack() {
     Node *first/ = Node(0,0); // （最左邊上面的那一格）
-    // 上面那行是不是多一個/
+    // 上面那行是不是要改成Node *first = new Node(0,0); (?
     head = first;
   }
 
@@ -102,6 +102,7 @@ int main() {
   return 0;
 
 }
+
 
 
 
