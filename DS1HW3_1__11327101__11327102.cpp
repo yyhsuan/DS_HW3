@@ -4,6 +4,44 @@
 #include <string>
 // 建立/寫入檔案	用 ofstream	ofstream file("a.txt")
 // 讀取檔https://ieet2022survey3.cycu.edu.tw/MySurvey案	用 ifstream	ifstream file("a.txt")
+class Stack {
+ private:
+  struct Node{
+    int row;
+    int column;
+    Node *next;  // 感覺原本少打*(?
+
+    Node(int r, int c) { // Node的建構子
+      row = r;
+      column = c;
+      next = NULL;
+    }
+  };
+  Node *head;
+ 
+ public:
+  Stack() {
+    Node *first = new Node(0,0); // （最左邊上面的那一格）
+    // 上面那行是不是要改成Node *first = new Node(0,0); (?
+    // 對
+    head = first;
+  }
+
+  void push(int r, int c) { 
+    Node *newNode = new Node(r, c); 
+    newNode->next = head; 
+    head = newNode; 
+  }
+  void pop(int &r, int &c) {
+    r = head->row;
+    c = head->column;
+    Node *temp = head;
+    head = head->next;
+    delete temp;
+  }
+
+};
+
 class Maze {
  private:
   int row;
@@ -58,7 +96,7 @@ class Maze {
       }
       c--;                 
       s.push(r, c);
-      Setgrid(r, c, ‘V’);
+      Setgrid(r, c, 'V');
      }
      if (c == 0 && grid[r * column + c] != 'O') {
        if (grid[r * column + c] == 'G') {
@@ -126,44 +164,6 @@ class Maze {
   }  
 };
 
-class Stack {
- private:
-  struct Node{
-    int row;
-    int column;
-    Node *next;  // 感覺原本少打*(?
-
-    Node(int r, int c) { // Node的建構子
-      row = r;
-      column = c;
-      next = NULL;
-    }
-  };
-  Node *head;
- 
- public:
-  Stack() {
-    Node *first = new Node(0,0); // （最左邊上面的那一格）
-    // 上面那行是不是要改成Node *first = new Node(0,0); (?
-    // 對
-    head = first;
-  }
-
-  void push(int r, int c) { 
-    Node *newNode = new Node(r, c); 
-    newNode->next = head; 
-    head = newNode; 
-  }
-  void pop(int &r, int &c) {
-    r = head->row;
-    c = head->column;
-    Node *temp = head;
-    head = head->next;
-    delete temp;
-  }
-
-};
-
 void Start() {
   std::cout << "*** (^_^) Data Structure (^o^) ***" << std::endl;
   std::cout << "*** Find the Goal(s) in a Maze ***" << std::endl;
@@ -188,6 +188,7 @@ int main() {
     a.initial(y, x);
     a.load(infile);
     a.print();
+    Stack s;
     infile.close();               // 關閉檔案
   }
 
