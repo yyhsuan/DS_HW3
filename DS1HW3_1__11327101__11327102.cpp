@@ -188,7 +188,6 @@ int main() {
     int y;
     infile >> x >> y; // 讀int x,y
     infile.get();
-    infile.get();
     a.initial(y, x);
     a.load(infile);
     std::cout << "hhhhh\n";
@@ -205,6 +204,7 @@ int main() {
   return 0;
 
 }
+
 
 
 
