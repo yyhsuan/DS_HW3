@@ -62,8 +62,6 @@ class Maze {
       c--;
       s.push(r, c); // 塞進去
     }
-    c++;
-    direction++; // 換方向
     return false;
   }
 
@@ -138,6 +136,7 @@ int main() {
   return 0;
 
 }
+
 
 
 
