@@ -63,7 +63,9 @@ class Maze {
       if ( ch != '\n' ) {
         grid[r * column + c] = ch;
         c++;
-      } else {
+      }
+      
+      else {
         r++;
         c = 0;
       }       
@@ -109,7 +111,7 @@ class Maze {
   }
 
   bool GoRight(int &r, int &c, Stack &s) { // r c 放目前的位置 ，向左到撞牆 direction走的方向
-    while (c + 1 >= column - 1 && grid[r * column + (c + 1)] != 'O') {
+    while (c + 1 < column && grid[r * column + (c + 1)] != 'O') {
       if (grid[r * column + c] == 'G') { // 到終點
         return true;
       }
@@ -177,7 +179,7 @@ void Start() {
 }
 
 int main() {
-  int file_number = 301;
+  int file_number = 302;
   std::string filename = std::to_string(file_number) + ".txt"; // 轉字串
   std::ifstream infile(filename); // 測試讀檔 github不能run
   Maze a;
@@ -185,10 +187,17 @@ int main() {
     int x;
     int y;
     infile >> x >> y; // 讀int x,y
+    infile.get();
+    infile.get();
     a.initial(y, x);
     a.load(infile);
+    std::cout << "hhhhh\n";
     a.print();
-    Stack s;
+    Stack s; // 測試上下左右
+    int r = 0;
+    int c = 0;
+    bool yes = a.GoRight(r, c, s);
+    a.print();
     infile.close();               // 關閉檔案
   }
 
@@ -196,8 +205,6 @@ int main() {
   return 0;
 
 }
-
-
 
 
 
