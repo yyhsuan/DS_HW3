@@ -52,16 +52,14 @@ class Maze {
   }
 
   bool GoLeft(int &r, int &c, Stack &s) { // r c 放目前的位置 ，向左到撞牆 direction走的方向
-    while( grid[r * column + c] != 'O' ) { // 右1 下2 左3 上4
-      if ( grid[r * column + c] == 'G' ) { // 到終點
-        return true; // 找到了
-      }
-      if ( c == 0 ) { // 跑到最左邊
-        break;
-      }
-      c--;
-      s.push(r, c); // 塞進去
-    }
+   while (c - 1 >= 0 && grid[r * column + (c - 1)] != 'O') {
+     if (grid[r * column + c] == 'G') { // 到終點
+       return true;
+     }
+     c--;                 
+     s.push(r, c);
+     Setgrid(r, c, ‘V’);
+   }
     return false;
   }
 
@@ -136,6 +134,7 @@ int main() {
   return 0;
 
 }
+
 
 
 
