@@ -77,7 +77,7 @@ int main() {
     int x;
     int y;
     infile >> x >> y; // 讀int x,y
-    a.initial(x, y);
+    a.initial(y, x);
     a.load(infile);
     a.print();
     infile.close();               // 關閉檔案
@@ -87,5 +87,6 @@ int main() {
   return 0;
 
 }
+
 
 
