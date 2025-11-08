@@ -77,7 +77,7 @@ class Maze {
       }
       c++;                 
       s.push(r, c);
-      Setgrid(r, c, ‘V’);
+      Setgrid(r, c, 'V');
     }
     if ( c == column - 1 && grid[r * column + c] != 'O' ) {
        if (grid[r * column + c] == 'G') {
@@ -195,6 +195,7 @@ int main() {
   return 0;
 
 }
+
 
 
 
