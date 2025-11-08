@@ -94,77 +94,121 @@ class Maze {
   }
 
   bool GoLeft(int &r, int &c, Stack &s) { // r c 放目前的位置
+    int count = 0;
     while (c - 1 >= 0 && grid[r * column + (c - 1)] != 'O') {
       if (grid[r * column + c] == 'G') { // 到終點
+        count++;
         return true;
       }
+      count++;
       c--;                 
       s.push(r, c);
       Setgrid(r, c, 'V');
-     }
-     if (c == 0 && grid[r * column + c] != 'O') {
-       if (grid[r * column + c] == 'G') {
-         return true;
-       }
-       s.push(r, c);
-       Setgrid(r, c, 'V');
-     }
-     return false;
+    }
+    if (c == 0 && grid[r * column + c] != 'O') {
+      if (grid[r * column + c] == 'G') {
+        count++;
+        return true;
+      }
+      count++;
+      s.push(r, c);
+      Setgrid(r, c, 'V');
+    }
+    if ( count > 0 ) {
+      return true;
+    }
+
+    else {
+      return false;
+    }
   }
 
   bool GoRight(int &r, int &c, Stack &s) { // r c 放目前的位置 ，向左到撞牆 direction走的方向
+    int count = 0;
     while (c + 1 < column && grid[r * column + (c + 1)] != 'O') {
       if (grid[r * column + c] == 'G') { // 到終點
+        count++;
         return true;
       }
-      c++;                 
+      c++;
+      count++;                 
       s.push(r, c);
       Setgrid(r, c, 'V');
     }
     if ( c == column - 1 && grid[r * column + c] != 'O' ) {
-       if (grid[r * column + c] == 'G') {
-         return true;
-       }
-       s.push(r, c);
-       Setgrid(r, c, 'V');
-     }
-     return false;
-  }  
-  bool GoUp(int &r, int &c, Stack &s) {
-    while (r - 1 >= 0 && grid[(r - 1) * column + c] != 'O') {
       if (grid[r * column + c] == 'G') {
+        count++;
         return true;
       }
+      s.push(r, c);
+      Setgrid(r, c, 'V');
+    }
+    if ( count > 0 ) {
+      return true;
+    }
+
+    else {
+      return false;
+    }
+  }  
+  bool GoUp(int &r, int &c, Stack &s) {
+    int count = 0;
+    while (r - 1 >= 0 && grid[(r - 1) * column + c] != 'O') {
+      if (grid[r * column + c] == 'G') {
+        count++;
+        return true;
+      }
+      count++;
       r--;
       s.push(r, c);
       Setgrid(r, c, 'V');
     }
     if (r == 0 && grid[r * column + c] != 'O') {
       if (grid[r * column + c] == 'G') {
+        count++;
         return true;
       }
+      count++;
       s.push(r, c);
       Setgrid(r, c, 'V');
     }
-    return false;
+    if ( count > 0 ) {
+      return true;
+    }
+
+    else {
+      return false;
+    }
   }  
-  bool GoDown(int &r, int &c, Stack &s) {
+  bool GoDown(int &r, int &c, Stack &s, Stack &back) {
+    int count = 0;
     while (r + 1 < row && grid[(r + 1) * column + c] != 'O') {
       if (grid[r * column + c] == 'G') {
+        count++;
         return true;
       }
+      count++;
       r++;
       s.push(r, c);
+      back.push(r, c);
       Setgrid(r, c, 'V');
     }
     if (r == row - 1 && grid[r * column + c] != 'O') {
       if (grid[r * column + c] == 'G') {
+        count++;
         return true;
       }
+      count++;
       s.push(r, c);
       Setgrid(r, c, 'V');
     }
-    return false;
+    if ( count > 0 ) {
+      return true;
+    }
+
+    else {
+      return false;
+    }
   }
   void Path(Stack &s) {
     int r, c;
@@ -216,6 +260,7 @@ int main() {
   return 0;
 
 }
+
 
 
 
