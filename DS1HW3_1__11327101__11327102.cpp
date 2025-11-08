@@ -54,7 +54,7 @@ class Stack {
   struct Node{
     int row;
     int column;
-    Node next;
+    Node *next;  // 感覺原本少打*(?
 
     Node(int r, int c) { // Node的建構子
       row = r;
@@ -67,6 +67,7 @@ class Stack {
  public:
   Stack() {
     Node *first/ = Node(0,0); // （最左邊上面的那一格）
+    // 上面那行是不是多一個/
     head = first;
   }
 
@@ -103,6 +104,7 @@ int main() {
   return 0;
 
 }
+
 
 
 
