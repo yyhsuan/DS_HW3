@@ -87,8 +87,43 @@ class Maze {
        Setgrid(r, c, 'V');
      }
      return false;
-  }
-
+  }  
+  bool GoUp(int &r, int &c, Stack &s) {
+    while (r - 1 >= 0 && grid[(r - 1) * column + c] != 'O') {
+      if (grid[r * column + c] == 'G') {
+        return true;
+      }
+      r--;
+      s.push(r, c);
+      Setgrid(r, c, 'V');
+    }
+    if (r == 0 && grid[r * column + c] != 'O') {
+      if (grid[r * column + c] == 'G') {
+        return true;
+      }
+      s.push(r, c);
+      Setgrid(r, c, 'V');
+    }
+    return false;
+  }  
+  bool GoDown(int &r, int &c, Stack &s) {
+    while (r + 1 < row && grid[(r + 1) * column + c] != 'O') {
+      if (grid[r * column + c] == 'G') {
+        return true;
+      }
+      r++;
+      s.push(r, c);
+      Setgrid(r, c, 'V');
+    }
+    if (r == row - 1 && grid[r * column + c] != 'O') {
+      if (grid[r * column + c] == 'G') {
+        return true;
+      }
+      s.push(r, c);
+      Setgrid(r, c, 'V');
+    }
+    return false;
+  }  
 };
 
 class Stack {
@@ -160,6 +195,7 @@ int main() {
   return 0;
 
 }
+
 
 
 
