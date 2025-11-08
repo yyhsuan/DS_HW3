@@ -165,7 +165,17 @@ class Maze {
       Setgrid(r, c, 'V');
     }
     return false;
-  }  
+  }
+  void Path(Stack &s) {
+    int r, c;
+    while (!s.empty()) {
+      s.pop(r, c);
+      if (Getgrid(r, c) != 'G') {
+        Setgrid(r, c, 'R');
+      }
+    }
+  }
+
 };
 
 void Start() {
@@ -206,6 +216,7 @@ int main() {
   return 0;
 
 }
+
 
 
 
