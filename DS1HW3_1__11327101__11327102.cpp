@@ -69,7 +69,9 @@ void Start() {
 }
 
 int main() {
-  std::ifstream infile("301.txt"); // 測試讀檔 github不能run
+  int file_number = 301;
+  std::string filename = std::to_string(file_number) + ".txt"; // 轉字串
+  std::ifstream infile(filename); // 測試讀檔 github不能run
   Maze a;
   if ( infile ) {
     int x;
