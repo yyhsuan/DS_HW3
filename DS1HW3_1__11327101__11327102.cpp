@@ -62,8 +62,9 @@ class Stack {
  
  public:
   Stack() {
-    Node *first/ = Node(0,0); // （最左邊上面的那一格）
+    Node *first = new Node(0,0); // （最左邊上面的那一格）
     // 上面那行是不是要改成Node *first = new Node(0,0); (?
+    // 對
     head = first;
   }
 
@@ -100,6 +101,7 @@ int main() {
   return 0;
 
 }
+
 
 
 
