@@ -16,6 +16,36 @@ class Maze {
     column = c;
     grid = new char[row * column];  
   }
+
+  void load(std::ifstream &infile) { // 載入迷宮資料
+    char ch;
+    int r = 0;
+    int c = 0;
+    while (infile.get(ch)) {   // 每次讀一個字元到 c
+      if ( ch != '\n' ) {
+        grid[r * column + c] = ch;
+        c++;
+      }
+
+      else {
+        r++;
+        c = 0;
+      }       
+    }
+    return;
+  }
+
+  void print() { // 印出迷宮資料
+    for (int r = 0; r < row; r++) {
+      for (int c = 0; c < column; c++) {
+        std::cout << grid[r * column + c];
+    }
+      if ( r > 0 ) {
+        std::cout << "\n";
+      }
+    }
+    return;
+  }
   
 };
 
@@ -40,19 +70,14 @@ void Start() {
 
 int main() {
   std::ifstream infile("301.txt"); // 測試讀檔 github不能run
+  Maze a;
   if ( infile ) {
-    std::cout << " uuuuu " << std::endl;
-    /*
-    std::string line;  // ← 這裡宣告一個變數 line
-    
-    while (getline(infile, line)) {  // 讀取檔案的一行到 line
-      std::cout << line << std::endl;        // 印出這一行
-    }
-    */
-    char c;
-    while (infile.get(c)) {   // 每次讀一個字元到 c
-      std::cout << c;            // 直接印出
-    }
+    int x;
+    int y;
+    infile >> x >> y; // 讀int x,y
+    a.initial(x, y);
+    a.load(infile);
+    a.print();
     infile.close();               // 關閉檔案
   }
 
@@ -60,6 +85,5 @@ int main() {
   return 0;
 
 }
-
 
 
