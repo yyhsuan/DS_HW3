@@ -75,12 +75,20 @@ class Stack {
     // 對
     head = first;
   }
+
   void push(int r, int c) { 
     Node *newNode = new Node(r, c); 
     newNode->next = head; 
     head = newNode; 
   }
-  
+  void pop(int &r, int &c) {
+    r = head->row;
+    c = head->column;
+    Node *temp = head;
+    head = head->next;
+    delete temp;
+  }
+
 };
 
 void Start() {
@@ -114,6 +122,7 @@ int main() {
   return 0;
 
 }
+
 
 
 
