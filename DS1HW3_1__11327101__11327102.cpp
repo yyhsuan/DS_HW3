@@ -194,8 +194,7 @@ class Maze {
     }
   }
 
-  bool Go(Stack &s) {
-    Stack back; // 存走過的
+  bool Go(Stack &s, Stack &back) {
     bool yes = false; // 和走過的r c 相同
     int r = 0, c = 0;
     bool have_go = false; // 找到g
@@ -257,7 +256,7 @@ class Maze {
     }
     return have_go;
   }
-  bool Findgoals(Stack &s, int number, Stack &back) {
+  bool Findgoals(Stack &s, int number, Stack &back, Stack &saveG) { // saveG 存G點位置
     bool yes = false;
     int r = 0, c = 0;
     bool have_go = false; 
@@ -274,6 +273,7 @@ class Maze {
             if (grid[r * column + c + 1] == 'G') {
               found++;
               Setgrid(r, c + 1, 'E');
+              saveG.push(r, c + 1);
               if (found == number) {
                 have_go = true;
                 break;
@@ -290,6 +290,7 @@ class Maze {
             if (grid[(r + 1) * column + c] == 'G') {
               found++;
               Setgrid(r + 1, c, 'E');
+              saveG.push(r + 1, c);
               if (found == number) {
                 have_go = true;
                 break;
@@ -306,6 +307,7 @@ class Maze {
             if (grid[r * column + c - 1] == 'G') {
               found++;
               Setgrid(r, c - 1, 'E');
+              saveG.push(r, c - 1);
               if (found == number) {
                 have_go = true;
                 break;
@@ -322,6 +324,7 @@ class Maze {
             if (grid[(r - 1) * column + c] == 'G') {
               found++;
               Setgrid(r - 1, c, 'E');
+              saveG.push(r - 1, c);
               if (found == number) {
                 have_go = true;
                 break;
@@ -347,13 +350,10 @@ void Stack::turnR(Maze &a) {  // 改R 因為編譯器的問題，所以放在這
   return;
 }
 
-void Stack::turnG(Maze &a) {  // 改R 因為編譯器的問題，所以放在這
+void Stack::turnG(Maze &a) {  // 改G 因為編譯器的問題，所以放在這
   Node *temp = head;
-  while (temp != NULL) {
-    char ch = a.Getgrid(temp->row, temp->column);
-    if ( ch == 'E' ) {
-      a.Setgrid(temp->row, temp->column, 'G');
-    }
+  while (temp->next != NULL) { // (0,0)不是G
+    a.Setgrid(temp->row, temp->column, 'G');
     temp = temp->next;
   }
   return;
@@ -386,9 +386,10 @@ void task1(std::string &filename) {
     a.initial(y, x);
     a.load(infile);
     Stack s;
+    Stack back;
     int r = 0;
     int c = 0;
-    bool yes = a.Go(s);
+    bool yes = a.Go(s, back);
     a.print();
     if ( yes ) {
       std::cout << "\n";
@@ -420,10 +421,11 @@ void task2(std::string filename) {
     a.load(infile);
     Stack s;
     Stack back;
+    Stack saveG;
     int r = 0;
     int c = 0;
-    bool yes = a.Findgoals(s,number, back);
-    back.turnG(a);
+    bool yes = a.Findgoals(s,number, back, saveG);
+    saveG.turnG(a);
     a.print();
     if ( yes ) {
       std::cout << "\n";
