@@ -409,7 +409,8 @@ void task1(std::string &filename) {
 void task2(std::string filename) { 
   int number;
   Maze a;
-  if ( !filename.empty() ) {
+  std::ifstream infile(filename);
+  if ( infile ) {
     std::cout << "Number of G (goals): ";
     std::cin >> number;
     std::ifstream infile(filename);
