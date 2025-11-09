@@ -55,6 +55,7 @@ class Stack {
   }
 
   void turnR(Maze &a);  // 只宣告 // 改R
+  void turnG(Maze &a); // 只宣告 // 改G
 
 };
 
@@ -256,8 +257,7 @@ class Maze {
     }
     return have_go;
   }
-  bool Findgoals(Stack &s, int number) {
-    Stack back;
+  bool Findgoals(Stack &s, int number, Stack &back) {
     bool yes = false;
     int r = 0, c = 0;
     bool have_go = false; 
@@ -273,7 +273,7 @@ class Maze {
           if (c < column - 1) {
             if (grid[r * column + c + 1] == 'G') {
               found++;
-              Setgrid(r, c + 1, 'V');
+              Setgrid(r, c + 1, 'E');
               if (found == number) {
                 have_go = true;
                 break;
@@ -289,7 +289,7 @@ class Maze {
           if (r < row - 1) {
             if (grid[(r + 1) * column + c] == 'G') {
               found++;
-              Setgrid(r + 1, c, 'V');
+              Setgrid(r + 1, c, 'E');
               if (found == number) {
                 have_go = true;
                 break;
@@ -305,7 +305,7 @@ class Maze {
           if (c > 0) {
             if (grid[r * column + c - 1] == 'G') {
               found++;
-              Setgrid(r, c - 1, 'V');
+              Setgrid(r, c - 1, 'E');
               if (found == number) {
                 have_go = true;
                 break;
@@ -321,7 +321,7 @@ class Maze {
           if (r > 0) {
             if (grid[(r - 1) * column + c] == 'G') {
               found++;
-              Setgrid(r - 1, c, 'V');
+              Setgrid(r - 1, c, 'E');
               if (found == number) {
                 have_go = true;
                 break;
@@ -342,6 +342,18 @@ void Stack::turnR(Maze &a) {  // 改R 因為編譯器的問題，所以放在這
   Node *temp = head;
   while (temp != NULL) {
     a.Setgrid(temp->row, temp->column, 'R');
+    temp = temp->next;
+  }
+  return;
+}
+
+void Stack::turnG(Maze &a) {  // 改R 因為編譯器的問題，所以放在這
+  Node *temp = head;
+  while (temp != NULL) {
+    char ch = a.Getgrid(temp->row, temp->column);
+    if ( ch == 'E' ) {
+      a.Setgrid(temp->row, temp->column, 'G');
+    }
     temp = temp->next;
   }
   return;
@@ -407,9 +419,11 @@ void task2(std::string filename) {
     a.initial(y, x);
     a.load(infile);
     Stack s;
+    Stack back;
     int r = 0;
     int c = 0;
-    bool yes = a.Findgoals(s,number);
+    bool yes = a.Findgoals(s,number, back);
+    back.turnG(a);
     a.print();
     if ( yes ) {
       std::cout << "\n";
@@ -446,5 +460,3 @@ int main() {
   return 0;
 
 }
-
-
