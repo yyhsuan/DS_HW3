@@ -339,6 +339,90 @@ class Maze {
     }
     return have_go;
   }
+
+  bool Findgoals3(Stack &s, int number, Stack &back, Stack &saveG) { // saveG 存G點位置
+    bool yes = false;
+    int r = 0, c = 0;
+    bool have_go = false; 
+    int found = 0;
+    s.push(r, c);
+    Setgrid(r, c, 'V');
+    while (!s.empty()) {
+      bool move = false;
+      yes = back.IsSame(r, c + 1);
+      if (!yes) {
+        if (GoRight(r, c, s, back)) {
+          move = true;
+          if (c < column - 1) {
+            if (grid[r * column + c + 1] == 'G') {
+              found++;
+              Setgrid(r, c + 1, 'E');
+              saveG.push(r, c + 1);
+              if (found == number) {
+                have_go = true;
+                break;
+              }
+            }
+          }
+        }
+      }
+      yes = back.IsSame(r + 1, c);
+      if (!yes) {
+        if (GoDown(r, c, s, back)) {
+          move = true;
+          if (r < row - 1) {
+            if (grid[(r + 1) * column + c] == 'G') {
+              found++;
+              Setgrid(r + 1, c, 'E');
+              saveG.push(r + 1, c);
+              if (found == number) {
+                have_go = true;
+                break;
+              }
+            }
+          }
+        }
+      }
+      yes = back.IsSame(r, c - 1);
+      if (!yes) {
+        if (GoLeft(r, c, s, back)) {
+          move = true;
+          if (c > 0) {
+            if (grid[r * column + c - 1] == 'G') {
+              found++;
+              Setgrid(r, c - 1, 'E');
+              saveG.push(r, c - 1);
+              if (found == number) {
+                have_go = true;
+                break;
+              }
+            }
+          }
+        }
+      }
+      yes = back.IsSame(r - 1, c);
+      if (!yes) {
+        if (GoUp(r, c, s, back)) {
+          move = true;
+          if (r > 0) {
+            if (grid[(r - 1) * column + c] == 'G') {
+              found++;
+              Setgrid(r - 1, c, 'E');
+              saveG.push(r - 1, c);
+              if (found == number) {
+                have_go = true;
+                break;
+              }
+            }
+          }
+        }
+      }
+      if (!move) { // 回上一格
+        s.pop(r, c);
+      }
+    }
+    return have_go;
+  }
 };
 
 void Stack::turnR(Maze &a) {  // 改R 因為編譯器的問題，所以放在這
@@ -441,6 +525,41 @@ void task2(std::string filename) {
   return;
 }
 
+void task3(std::string filename) { 
+  int number;
+  Maze a;
+  std::ifstream infile(filename);
+  if ( infile ) {
+    std::cout << "Number of G (goals): ";
+    std::cin >> number;
+    std::ifstream infile(filename);
+    int x;
+    int y;
+    infile >> x >> y; // 讀int x,y
+    infile.get();
+    a.initial(y, x);
+    a.load(infile);
+    Stack s;
+    Stack back;
+    Stack saveG;
+    int r = 0;
+    int c = 0;
+    bool yes = a.Findgoals3(s,number, back, saveG);
+    saveG.turnG(a);
+    a.print();
+    if ( yes ) {
+      std::cout << "\n";
+      s.turnR(a);
+      a.print();
+    }
+  }
+  else {
+    std::cout << "### Execute command 1 to load a maze! ###";
+  }
+  std::cout << std::endl;
+  return;
+}
+
 int main() {
   std::string filename;
   int common;
@@ -455,6 +574,9 @@ int main() {
     }
     if ( common == 0 ) {
       return 0;
+    }
+    if ( common == 3 ) {
+      task3(filename);
     }
     Start();
   }
