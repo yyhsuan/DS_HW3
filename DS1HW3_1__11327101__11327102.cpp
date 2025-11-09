@@ -4,6 +4,7 @@
 #include <string>
 // 建立/寫入檔案	用 ofstream	ofstream file("a.txt")
 // 讀取檔https://ieet2022survey3.cycu.edu.tw/MySurvey案	用 ifstream	ifstream file("a.txt")
+class Maze;
 class Stack {
  private:
   struct Node{
@@ -52,6 +53,8 @@ class Stack {
     }
     return false;
   }
+
+  void turnR(Maze &a);  // 只宣告 // 改R
 
 };
 
@@ -199,15 +202,14 @@ class Maze {
     }
   }
 
-  bool Go() {
-    Stack s;
+  bool Go(Stack &s) {
     Stack back; // 存走過的
     bool yes = false; // 和走過的r c 相同
     int r = 0, c = 0;
     bool have_go = false; // 找到g
     s.push(r, c);
     Setgrid(r, c, 'V');
-    while (true) {
+    while (!s.empty()) {
       bool move = false;
       yes = back.IsSame(r, c + 1);
       if ( !yes ) {
@@ -260,13 +262,19 @@ class Maze {
       if (!move) {// 回上一格
         s.pop(r, c);
       }
-      if ( s.empty() ) {
-        break;
-      }
     }
     return have_go;
   }
 };
+
+void Stack::turnR(Maze &a) {  // 改R 因為編譯器的問題，所以放在這
+  Node *temp = head;
+  while (temp != NULL) {
+    a.Setgrid(temp->row, temp->column, 'R');
+    temp = temp->next;
+  }
+  return;
+}
 
 void Start() {
   std::cout << "*** (^_^) Data Structure (^o^) ***" << std::endl;
@@ -281,7 +289,7 @@ void Start() {
 }
 
 int main() {
-  int file_number = 305;
+  int file_number = 301;
   std::string filename = std::to_string(file_number) + ".txt"; // 轉字串
   std::ifstream infile(filename); // 測試讀檔 github不能run
   Maze a;
@@ -293,11 +301,17 @@ int main() {
     a.initial(y, x);
     a.load(infile);
     a.print();
+    std::cout << "\n";
     Stack s;
     int r = 0;
     int c = 0;
-    bool yes = a.Go();
+    bool yes = a.Go(s);
     a.print();
+    if ( yes ) {
+      std::cout << "\n";
+      s.turnR(a);
+      a.print();
+    }
     infile.close();               // 關閉檔案
   }
 
