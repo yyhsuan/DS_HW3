@@ -3,8 +3,7 @@
 #include <iostream>
 #include <string>
 // 建立/寫入檔案	用 ofstream	ofstream file("a.txt")
-// 讀取檔https://ieet2022survey3.cycu.edu.tw/MySurvey案	用 ifstream	ifstream file("a.txt")
-// 關閉檔案 infile.close();               
+// 讀取檔https://ieet2022survey3.cycu.edu.tw/MySurvey案	用 ifstream	ifstream file("a.txt")       
 class Maze;
 class Stack {
  private:
@@ -286,16 +285,16 @@ void Start() {
   std::cout << "* 3. How many goals?             *" << std::endl;
   std::cout << "* 4. Shortest path to one goal   *" << std::endl;
   std::cout << "**********************************" << std::endl;
-  std::cout << "Input a command(0, 1, 2, 3, 4):";
+  std::cout << "Input a command(0, 1, 2, 3, 4): ";
 }
 
-void task1() {
+void task1(std::string &filename) {
   int file_number;
+  Maze a;
   std::cout << "Input a file number: ";
   std::cin >> file_number;
-  std::string filename = std::to_string(file_number) + ".txt"; // 轉字串
+  filename = std::to_string(file_number) + ".txt"; // 轉字串
   std::ifstream infile(filename); // 測試讀檔 github不能run
-  Maze a;
   if ( infile ) {
     int x;
     int y;
@@ -319,16 +318,53 @@ void task1() {
     std::cout << "input" << file_number << ".txt does not exist!";
   }
   std::cout << std::endl;
+  infile.close(); // 關閉檔案
+  return;
+}
+
+void task2(std::string filename) { // 還沒完成
+  int number;
+  Maze a;
+  if ( !filename.empty() ) {
+    std::cout << "Number of G (goals): ";
+    std::cin >> number;
+    std::ifstream infile(filename);
+    int x;
+    int y;
+    infile >> x >> y; // 讀int x,y
+    infile.get();
+    a.initial(y, x);
+    a.load(infile);
+    Stack s;
+    int r = 0;
+    int c = 0;
+    bool yes = a.Go(s);
+    a.print();
+    if ( yes ) {
+      std::cout << "\n";
+      s.turnR(a);
+      a.print();
+    }
+  }
+
+  else {
+    std::cout << "### Execute command 1 to load a maze! ###";
+  }
+  std::cout << std::endl;
   return;
 }
 
 int main() {
+  std::string filename;
   int common;
   Start();
   while ( std::cin >> common ) {
     std::cout << std::endl;
     if ( common == 1 ) {
-      task1();
+      task1(filename);
+    }
+    if ( common == 2 ) {
+      task2(filename);
     }
     if ( common == 0 ) {
       return 0;
