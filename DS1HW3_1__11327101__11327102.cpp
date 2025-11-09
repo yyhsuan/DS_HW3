@@ -340,7 +340,7 @@ class Maze {
     return have_go;
   }
 
-  bool Findgoals3(Stack &s, int number, Stack &back, Stack &saveG) { // saveG 存G點位置
+  bool Findgoals3(Stack &s, int &number, Stack &back, Stack &saveG) { // saveG 存G點位置
     bool yes = false;
     int r = 0, c = 0;
     bool have_go = false; 
@@ -358,10 +358,8 @@ class Maze {
               found++;
               Setgrid(r, c + 1, 'E');
               saveG.push(r, c + 1);
-              if (found == number) {
-                have_go = true;
-                break;
-              }
+              number++;
+              have_go = true;
             }
           }
         }
@@ -375,10 +373,8 @@ class Maze {
               found++;
               Setgrid(r + 1, c, 'E');
               saveG.push(r + 1, c);
-              if (found == number) {
-                have_go = true;
-                break;
-              }
+              number++;
+              have_go = true;
             }
           }
         }
@@ -392,10 +388,8 @@ class Maze {
               found++;
               Setgrid(r, c - 1, 'E');
               saveG.push(r, c - 1);
-              if (found == number) {
-                have_go = true;
-                break;
-              }
+              number++;
+              have_go = true;
             }
           }
         }
@@ -409,10 +403,8 @@ class Maze {
               found++;
               Setgrid(r - 1, c, 'E');
               saveG.push(r - 1, c);
-              if (found == number) {
-                have_go = true;
-                break;
-              }
+              number++;
+              have_go = true;
             }
           }
         }
@@ -526,12 +518,10 @@ void task2(std::string filename) {
 }
 
 void task3(std::string filename) { 
-  int number;
+  int number = 0;
   Maze a;
   std::ifstream infile(filename);
   if ( infile ) {
-    std::cout << "Number of G (goals): ";
-    std::cin >> number;
     std::ifstream infile(filename);
     int x;
     int y;
@@ -552,6 +542,8 @@ void task3(std::string filename) {
       s.turnR(a);
       a.print();
     }
+    std::cout << "\n";
+    std::cout << "The maze has " << number <<  " goal(s) in total.";
   }
   else {
     std::cout << "### Execute command 1 to load a maze! ###";
