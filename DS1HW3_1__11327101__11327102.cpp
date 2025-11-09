@@ -192,15 +192,6 @@ class Maze {
       return false;
     }
   }
-  void Path(Stack &s) {
-    int r, c;
-    while (!s.empty()) {
-      s.pop(r, c);
-      if (Getgrid(r, c) != 'G') {
-        Setgrid(r, c, 'R');
-      }
-    }
-  }
 
   bool Go(Stack &s) {
     Stack back; // 存走過的
@@ -376,3 +367,4 @@ int main() {
   return 0;
 
 }
+
