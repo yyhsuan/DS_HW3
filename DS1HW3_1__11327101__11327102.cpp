@@ -257,11 +257,11 @@ class Maze {
           }
         }
       }
-      if ( r == row - 1 && c == column - 1 ) {
-        break;
-      }
       if (!move) {// 回上一格
         s.pop(r, c);
+      }
+      if ( s.empty() ) {
+        break;
       }
     }
     return have_go;
@@ -281,7 +281,7 @@ void Start() {
 }
 
 int main() {
-  int file_number = 302;
+  int file_number = 305;
   std::string filename = std::to_string(file_number) + ".txt"; // 轉字串
   std::ifstream infile(filename); // 測試讀檔 github不能run
   Maze a;
@@ -292,9 +292,8 @@ int main() {
     infile.get();
     a.initial(y, x);
     a.load(infile);
-    std::cout << "hhhhh\n";
     a.print();
-    Stack s; // 測試上下左右
+    Stack s;
     int r = 0;
     int c = 0;
     bool yes = a.Go();
@@ -306,43 +305,3 @@ int main() {
   return 0;
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
