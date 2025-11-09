@@ -54,10 +54,14 @@ class Stack {
     return false;
   }
 
+  void copy(Stack &s) {
+    head = s.head;
+  }
+
   void turnR(Maze &a);  // 只宣告 // 改R
   void turnG(Maze &a); // 只宣告 // 改G
   int Length() {
-    int count = 0;
+    int count = 1;
     Node *temp = head;
     while (temp != NULL) {
       count++;
@@ -202,6 +206,204 @@ class Maze {
     }
   }
 
+  bool GoLeft4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) { // r c 放目前的位置
+    int count = 0;
+    while (c - 1 >= 0 && grid[r * column + (c - 1)] != 'O') {
+      if ( path < size ) {
+        if (grid[r * column + c - 1 ] == 'G') { // 到終點
+          count++;
+          return true;
+        }
+        count++;
+        c--;      
+        s.push(r, c);
+        back.push(r, c);
+        Setgrid(r, c, 'V');
+        path++;
+      }
+
+      else {
+        break;
+      }
+    }
+    if ( count > 0 ) {
+      return true;
+    }
+
+    else {
+      return false;
+    }
+  }
+
+  bool GoRight4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) { // r c 放目前的位置 ，向左到撞牆 direction走的方向
+    int count = 0;
+    while (c + 1 < column && grid[r * column + (c + 1)] != 'O') {
+      if ( path < size ) {
+        if (grid[r * column + c + 1] == 'G') { // 到終點
+          count++;
+          return true;
+        }
+        count++;                 
+        c++;
+        s.push(r, c);
+        back.push(r, c);
+        Setgrid(r, c, 'V');
+      }
+
+      else {
+        break;
+      }
+    }
+    if ( count > 0 ) {
+      return true;
+    }
+
+    else {
+      return false;
+    }
+  }  
+  bool GoUp4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) {
+    int count = 0;
+    while (r - 1 >= 0 && grid[(r - 1) * column + c] != 'O') {
+      if ( path < size ) {
+        if (grid[(r - 1) * column + c] == 'G') {
+          count++;
+          return true;
+        }
+        count++;
+        r--;
+        s.push(r, c);
+        back.push(r, c);
+        Setgrid(r, c, 'V');
+      }
+
+      else {
+        break;
+      }
+    }
+    if ( count > 0 ) {
+      return true;
+    }
+
+    else {
+      return false;
+    }
+  }  
+  bool GoDown4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) {
+    int count = 0;
+    while (r + 1 < row && grid[(r + 1) * column + c] != 'O') {
+      if ( path < size ) {
+        if (grid[(r + 1) * column + c] == 'G') {
+          count++;
+          return true;
+        }
+        count++;
+        r++;
+        s.push(r, c);
+        back.push(r, c);
+        Setgrid(r, c, 'V');
+      }
+
+      else {
+        break;
+      }
+    }
+    if ( count > 0 ) {
+      return true;
+    }
+
+    else {
+      return false;
+    }
+  }
+
+  bool Go4(Stack &s, Stack &back, int &size) {
+    Stack small;
+    bool yes = false; // 和走過的r c 相同
+    int r = 0, c = 0;
+    bool have_go = false; // 找到g
+    int is_small = size;
+    int path = 1; // 每條的數量
+    s.push(r, c);
+    Setgrid(r, c, 'V');
+    while (!s.empty()) {
+      bool move = false;
+      yes = back.IsSame(r, c + 1);
+      if ( !yes ) {
+        if (GoRight4(r, c, s, back, is_small, path)) { 
+          move = true; 
+          if ( c < column - 1 ) {
+            if ( grid[r * column + c + 1] == 'G' ) {
+              have_go = true;
+              if ( path < is_small ) {
+                is_small = path;
+                small.copy(s);
+              }
+              path--;
+              s.pop(r, c);
+            }
+          }
+        }
+      }
+      yes = back.IsSame(r + 1, c);
+      if ( !yes ) {
+        if (GoDown4(r, c, s, back, is_small, path)) { 
+          move = true;
+          if ( r < row - 1) {
+            if ( grid[(r + 1) * column + c] == 'G' ) {
+              have_go = true;
+              if ( path < is_small ) {
+                is_small = path;
+                small.copy(s);
+              }
+              path--;
+              s.pop(r, c);
+            }
+          }
+        }
+      }
+      yes = back.IsSame(r, c - 1);
+      if ( !yes ) {
+        if (GoLeft4(r, c, s, back, is_small, path)) { 
+          move = true;
+          if ( c > 0 ) {
+            if ( grid[r * column + c - 1] == 'G' ) {
+              have_go = true;
+              if ( path < is_small ) {
+                is_small = path;
+                small.copy(s);
+              }
+              path--;
+              s.pop(r, c);
+            }
+          }
+        }
+      }
+      yes = back.IsSame(r - 1, c);
+      if ( !yes ) {
+        if (GoUp4(r, c, s, back, is_small, path)) { 
+          move = true;
+          if ( r > 0 ) {
+            if ( grid[(r - 1) * column + c] == 'G' ) {
+              have_go = true;
+              if ( path < is_small ) {
+                is_small = path;
+                small.copy(s);
+              }
+              path--;
+              s.pop(r, c);
+            }
+          }
+        }
+      }
+      if (!move) {// 回上一格
+        path--;
+        s.pop(r, c);
+      }
+    }
+    return have_go;
+  }
+
   bool Go(Stack &s, Stack &back) {
     bool yes = false; // 和走過的r c 相同
     int r = 0, c = 0;
@@ -264,6 +466,7 @@ class Maze {
     }
     return have_go;
   }
+
   bool Findgoals(Stack &s, int number, Stack &back, Stack &saveG) { // saveG 存G點位置
     bool yes = false;
     int r = 0, c = 0;
@@ -560,6 +763,46 @@ void task3(std::string filename) {
   return;
 }
 
+void task4() {
+  std::string filename;
+  int file_number;
+  Maze a;
+  std::cout << "Input a file number: ";
+  std::cin >> file_number;
+  filename = std::to_string(file_number) + ".txt"; // 轉字串
+  std::ifstream infile(filename); // 測試讀檔 github不能run
+  if ( infile ) {
+    int x;
+    int y;
+    infile >> x >> y; // 讀int x,y
+    infile.get();
+    a.initial(y, x);
+    a.load(infile);
+    Stack s;
+    Stack back;
+    int r = 0;
+    int c = 0;
+    bool yes = a.Go(s, back);
+    int size = s.Length();
+    Stack s_2;
+    Stack back_2;
+    bool yes_2 = a.Go4(s_2, back_2, size);
+    a.print();
+    if ( yes_2 ) {
+      std::cout << "\n";
+      s.turnR(a);
+      a.print();
+    }
+  }
+
+  else {
+    std::cout << "input" << file_number << ".txt does not exist!";
+  }
+  std::cout << std::endl;
+  infile.close(); // 關閉檔案
+  return;
+}
+
 int main() {
   std::string filename;
   int common;
@@ -578,6 +821,10 @@ int main() {
     if ( common == 3 ) {
       task3(filename);
     }
+
+    if ( common == 4 ) {
+      task4();
+    }
     Start();
   }
 
@@ -585,4 +832,3 @@ int main() {
   return 0;
 
 }
-
