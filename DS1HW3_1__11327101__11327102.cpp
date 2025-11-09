@@ -4,6 +4,7 @@
 #include <string>
 // 建立/寫入檔案	用 ofstream	ofstream file("a.txt")
 // 讀取檔https://ieet2022survey3.cycu.edu.tw/MySurvey案	用 ifstream	ifstream file("a.txt")
+// 關閉檔案 infile.close();               
 class Maze;
 class Stack {
  private:
@@ -285,11 +286,13 @@ void Start() {
   std::cout << "* 3. How many goals?             *" << std::endl;
   std::cout << "* 4. Shortest path to one goal   *" << std::endl;
   std::cout << "**********************************" << std::endl;
-  std::cout << "Input a command: " << std::endl;
+  std::cout << "Input a command(0, 1, 2, 3, 4):";
 }
 
-int main() {
-  int file_number = 301;
+void task1() {
+  int file_number;
+  std::cout << "Input a file number: ";
+  std::cin >> file_number;
   std::string filename = std::to_string(file_number) + ".txt"; // 轉字串
   std::ifstream infile(filename); // 測試讀檔 github不能run
   Maze a;
@@ -300,8 +303,6 @@ int main() {
     infile.get();
     a.initial(y, x);
     a.load(infile);
-    a.print();
-    std::cout << "\n";
     Stack s;
     int r = 0;
     int c = 0;
@@ -312,7 +313,27 @@ int main() {
       s.turnR(a);
       a.print();
     }
-    infile.close();               // 關閉檔案
+  }
+
+  else {
+    std::cout << "input" << file_number << ".txt does not exist!";
+  }
+  std::cout << std::endl;
+  return;
+}
+
+int main() {
+  int common;
+  Start();
+  while ( std::cin >> common ) {
+    std::cout << std::endl;
+    if ( common == 1 ) {
+      task1();
+    }
+    if ( common == 0 ) {
+      return 0;
+    }
+    Start();
   }
 
 
