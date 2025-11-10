@@ -703,6 +703,7 @@ void task1(std::string &filename) {
   std::cin >> file_number;
   filename = std::to_string(file_number) + ".txt"; // 轉字串
   std::ifstream infile(filename); // 測試讀檔 github不能run
+  char ch = getchar(ch);
   if ( infile ) {
     int x;
     int y;
@@ -808,6 +809,7 @@ void task4() {
   std::cout << "Input a file number: ";
   std::cin >> file_number;
   filename = std::to_string(file_number) + ".txt"; // 轉字串
+  char ch = getchar(ch);
   std::ifstream infile(filename); // 測試讀檔 github不能run
   if ( infile ) {
     int x;
@@ -900,6 +902,7 @@ int main() {
   }
   return 0;
 }
+
 
 
 
