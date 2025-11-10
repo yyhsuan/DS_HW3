@@ -236,12 +236,40 @@ class Maze {
     }
   }
 
+  bool GoLeft4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) { // r c 放目前的位置
+    int count = 0;
+    while (c - 1 >= 0 && grid[r * column + (c - 1)] != 'O') {
+      if ( path < size ) {
+        if (grid[r * column + c - 1 ] == 'G') { // 到終點
+          count++;
+          return true;
+        }
+        count++;
+        c--;      
+        s.push(r, c);
+        back.push(r, c);
+        Setgrid(r, c, 'V');
+        path++;
+      }
+
+      else {
+        break;
+      }
+    }
+    if ( count > 0 ) {
+      return true;
+    }
+
+    else {
+      return false;
+    }
+  }
+
   bool GoRight4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) { // r c 放目前的位置 ，向左到撞牆 direction走的方向
     int count = 0;
     while (c + 1 < column && grid[r * column + (c + 1)] != 'O') {
       if ( path < size ) {
         if (grid[r * column + c + 1] == 'G') { // 到終點
-          path++;
           count++;
           return true;
         }
@@ -270,7 +298,6 @@ class Maze {
     while (r - 1 >= 0 && grid[(r - 1) * column + c] != 'O') {
       if ( path < size ) {
         if (grid[(r - 1) * column + c] == 'G') {
-          path++;
           count++;
           return true;
         }
@@ -299,7 +326,6 @@ class Maze {
     while (r + 1 < row && grid[(r + 1) * column + c] != 'O') {
       if ( path < size ) {
         if (grid[(r + 1) * column + c] == 'G') {
-          path++;
           count++;
           return true;
         }
@@ -342,6 +368,7 @@ class Maze {
           if ( c < column - 1 ) {
             if ( grid[r * column + c + 1] == 'G' ) {
               have_go = true;
+              std::cout << path << "\n";
               if ( path < is_small ) {
                 is_small = path;
                 small.copy(s);
@@ -358,6 +385,7 @@ class Maze {
           move = true;
           if ( r < row - 1) {
             if ( grid[(r + 1) * column + c] == 'G' ) {
+              std::cout << path << "\n";
               have_go = true;
               if ( path < is_small ) {
                 is_small = path;
@@ -375,6 +403,7 @@ class Maze {
           move = true;
           if ( c > 0 ) {
             if ( grid[r * column + c - 1] == 'G' ) {
+              std::cout << path << "\n";
               have_go = true;
               if ( path < is_small ) {
                 is_small = path;
@@ -392,6 +421,7 @@ class Maze {
           move = true;
           if ( r > 0 ) {
             if ( grid[(r - 1) * column + c] == 'G' ) {
+              std::cout << path << "\n";
               have_go = true;
               if ( path < is_small ) {
                 is_small = path;
@@ -408,6 +438,7 @@ class Maze {
         s.pop(r, c);
       }
     }
+    size = is_small;
     return have_go;
   }
 
@@ -791,6 +822,7 @@ void task4() {
     int c = 0;
     bool yes = a.Go(s, back);
     int size = s.Length();
+    std::cout << size << "\n";
     infile.close();
     std::ifstream infile(filename);
     infile >> x >> y; // 讀int x,y
@@ -868,5 +900,6 @@ int main() {
   }
   return 0;
 }
+
 
 
