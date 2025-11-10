@@ -211,6 +211,7 @@ class Maze {
     while (c - 1 >= 0 && grid[r * column + (c - 1)] != 'O') {
       if ( path < size ) {
         if (grid[r * column + c - 1 ] == 'G') { // 到終點
+          path++;
           count++;
           return true;
         }
@@ -240,6 +241,7 @@ class Maze {
     while (c + 1 < column && grid[r * column + (c + 1)] != 'O') {
       if ( path < size ) {
         if (grid[r * column + c + 1] == 'G') { // 到終點
+          path++;
           count++;
           return true;
         }
@@ -268,6 +270,7 @@ class Maze {
     while (r - 1 >= 0 && grid[(r - 1) * column + c] != 'O') {
       if ( path < size ) {
         if (grid[(r - 1) * column + c] == 'G') {
+          path++;
           count++;
           return true;
         }
@@ -296,6 +299,7 @@ class Maze {
     while (r + 1 < row && grid[(r + 1) * column + c] != 'O') {
       if ( path < size ) {
         if (grid[(r + 1) * column + c] == 'G') {
+          path++;
           count++;
           return true;
         }
@@ -835,4 +839,3 @@ int main() {
   return 0;
 
 }
-
