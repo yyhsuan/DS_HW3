@@ -251,6 +251,7 @@ class Maze {
 
       else {
         if (grid[r * column + c - 1 ] != 'G') {
+
           path--;
           s.pop(r, c);
         }
@@ -363,8 +364,7 @@ class Maze {
     }
   }
 
-  bool Go4(Stack &s, Stack &back, int &size) {
-    Stack small;
+  bool Go4(Stack &s, Stack &back, int &size, Stack &small) {
     bool yes = false; // 和走過的r c 相同
     int r = 0, c = 0;
     bool have_go = false; // 找到g
@@ -380,7 +380,7 @@ class Maze {
           if ( c < column - 1 ) {
             if ( grid[r * column + c + 1] == 'G' ) {
               have_go = true;
-              if ( path < is_small ) {
+              if ( path <= is_small ) {
                 is_small = path;
                 small.copy(s);
               }
@@ -414,7 +414,7 @@ class Maze {
           if ( c > 0 ) {
             if ( grid[r * column + c - 1] == 'G' ) {
               have_go = true;
-              if ( path < is_small ) {
+              if ( path <= is_small ) {
                 is_small = path;
                 small.copy(s);
               }
@@ -856,6 +856,7 @@ void task4() {
     bool yes = a.Go(s, back);
     int size = s.Length();
     infile.close();
+    Stack small;
     std::ifstream infile(filename);
     infile >> x >> y; // 讀int x,y
     infile.get();
@@ -864,11 +865,11 @@ void task4() {
     b.load(infile);
     Stack s_2;
     Stack back_2;
-    bool yes_2 = b.Go4(s_2, back_2, size);
+    bool yes_2 = b.Go4(s_2, back_2, size, small);
     b.print();
     if ( yes_2 ) {
       std::cout << "\n";
-      s.turnR(b);
+      small.turnR(b);
       b.print();
     }
   }
@@ -932,5 +933,3 @@ int main() {
   }
   return 0;
 }
-
-
