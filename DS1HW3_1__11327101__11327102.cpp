@@ -248,6 +248,7 @@ class Maze {
         s.push(r, c);
         back.push(r, c);
         Setgrid(r, c, 'V');
+        path++;
       }
 
       else {
@@ -275,6 +276,7 @@ class Maze {
         s.push(r, c);
         back.push(r, c);
         Setgrid(r, c, 'V');
+        path++;
       }
 
       else {
@@ -302,6 +304,7 @@ class Maze {
         s.push(r, c);
         back.push(r, c);
         Setgrid(r, c, 'V');
+        path++;
       }
 
       else {
@@ -832,3 +835,4 @@ int main() {
   return 0;
 
 }
+
