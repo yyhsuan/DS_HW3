@@ -791,14 +791,21 @@ void task4() {
     int c = 0;
     bool yes = a.Go(s, back);
     int size = s.Length();
+    infile.close();
+    std::ifstream infile(filename);
+    infile >> x >> y; // 讀int x,y
+    infile.get();
+    Maze b;
+    b.initial(y, x);
+    b.load(infile);
     Stack s_2;
     Stack back_2;
-    bool yes_2 = a.Go4(s_2, back_2, size);
-    a.print();
+    bool yes_2 = b.Go4(s_2, back_2, size);
+    b.print();
     if ( yes_2 ) {
       std::cout << "\n";
-      s.turnR(a);
-      a.print();
+      s.turnR(b);
+      b.print();
     }
   }
 
@@ -809,7 +816,6 @@ void task4() {
   infile.close(); // 關閉檔案
   return;
 }
-
 int main() {
   std::string filename;
   char ch;
@@ -863,3 +869,4 @@ int main() {
   }
   return 0;
 }
+
