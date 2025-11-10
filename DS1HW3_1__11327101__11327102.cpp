@@ -209,7 +209,7 @@ class Maze {
   bool GoLeft4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) { // r c 放目前的位置
     int count = 0;
     while (c - 1 >= 0 && grid[r * column + (c - 1)] != 'O') {
-      if ( path < size ) {
+      if ( path <= size ) {
         if (grid[r * column + c - 1 ] == 'G') { // 到終點
           path++;
           count++;
@@ -239,7 +239,7 @@ class Maze {
   bool GoLeft4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) { // r c 放目前的位置
     int count = 0;
     while (c - 1 >= 0 && grid[r * column + (c - 1)] != 'O') {
-      if ( path < size ) {
+      if ( path <= size ) {
         if (grid[r * column + c - 1 ] == 'G') { // 到終點
           count++;
           return true;
@@ -268,7 +268,7 @@ class Maze {
   bool GoRight4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) { // r c 放目前的位置 ，向左到撞牆 direction走的方向
     int count = 0;
     while (c + 1 < column && grid[r * column + (c + 1)] != 'O') {
-      if ( path < size ) {
+      if ( path <= size ) {
         if (grid[r * column + c + 1] == 'G') { // 到終點
           count++;
           return true;
@@ -296,7 +296,7 @@ class Maze {
   bool GoUp4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) {
     int count = 0;
     while (r - 1 >= 0 && grid[(r - 1) * column + c] != 'O') {
-      if ( path < size ) {
+      if ( path <= size ) {
         if (grid[(r - 1) * column + c] == 'G') {
           count++;
           return true;
@@ -324,7 +324,7 @@ class Maze {
   bool GoDown4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) {
     int count = 0;
     while (r + 1 < row && grid[(r + 1) * column + c] != 'O') {
-      if ( path < size ) {
+      if ( path <= size ) {
         if (grid[(r + 1) * column + c] == 'G') {
           count++;
           return true;
@@ -900,6 +900,7 @@ int main() {
   }
   return 0;
 }
+
 
 
 
