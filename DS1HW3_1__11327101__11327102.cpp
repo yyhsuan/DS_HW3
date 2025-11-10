@@ -79,10 +79,14 @@ class Stack {
     return;
   }
 
-  void getRC() {
+  int getR() {
     Node *temp = head;
-    std::cout << "r " << temp->row << " ,c " << temp->column << "\n";
-    return;
+    return temp->row;
+  }
+
+  int getC() {
+    Node *temp = head;
+    return temp->column;
   }
 
 };
@@ -241,8 +245,10 @@ class Maze {
       }
 
       else {
-        path--;
-        s.pop(r, c);
+        if (grid[r * column + c - 1 ] != 'G') {
+          path--;
+          s.pop(r, c);
+        }
         break;
       }
     }
@@ -272,8 +278,10 @@ class Maze {
       }
 
       else {
-        path--;
-        s.pop(r, c);
+        if (grid[r * column + c + 1] != 'G') {
+          path--;
+          s.pop(r, c);
+        }
         break;
       }
     }
@@ -302,8 +310,10 @@ class Maze {
       }
 
       else {
-        path--;
-        s.pop(r, c);
+        if (grid[(r - 1) * column + c] != 'G') {
+          path--;
+          s.pop(r, c);
+        }
         break;
       }
     }
@@ -332,8 +342,10 @@ class Maze {
       }
 
       else {
-        path--;
-        s.pop(r, c);
+        if (grid[(r + 1) * column + c] != 'G') {
+          path--;
+          s.pop(r, c);
+        }
         break;
       }
     }
