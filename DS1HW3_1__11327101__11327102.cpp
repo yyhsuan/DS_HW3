@@ -55,7 +55,12 @@ class Stack {
   }
 
   void copy(Stack &s) {
-    head = s.head;
+    Node *temp = s.head;
+    while (temp != NULL ) {
+      push(temp->row, temp->column);
+      temp = temp->next;
+    }
+    return;
   }
 
   void turnR(Maze &a);  // 只宣告 // 改R
@@ -927,4 +932,5 @@ int main() {
   }
   return 0;
 }
+
 
