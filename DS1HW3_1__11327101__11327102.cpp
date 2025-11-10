@@ -821,7 +821,6 @@ int main() {
   char ch;
   int command = 0;
   bool has_command1;
-  bool first = true;
   Start();
   while (true) {
     command = 0;
@@ -869,4 +868,5 @@ int main() {
   }
   return 0;
 }
+
 
