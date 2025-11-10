@@ -812,30 +812,54 @@ void task4() {
 
 int main() {
   std::string filename;
-  int common;
+  char ch;
+  int command = 0;
+  bool has_command1;
+  bool first = true;
   Start();
-  while ( std::cin >> common ) {
-    std::cout << std::endl;
-    if ( common == 1 ) {
-      task1(filename);
+  while (true) {
+    command = 0;
+    bool has_digit = false;
+    bool invalid = false;
+    while ((ch = getchar()) != '\n') {
+      if (ch == ' ' || ch == '\t') {
+        continue;
+      } else if (ch >= '0' && ch <= '4') {
+        if (has_digit) {
+          invalid = true; // 多個數字
+        } else {
+          command = ch - '0';
+          has_digit = true;
+        }
+      } else { // 非法字元
+        invalid = true;
+      }
     }
-    if ( common == 2 ) {
-      task2(filename);
+    // 處理非法輸入
+    if (invalid || (!has_digit)) {
+      std::cout << "Command does not exist!" << std::endl << std::endl;
+      Start();
+      continue;
     }
-    if ( common == 0 ) {
+    if (command == 0) {
       return 0;
     }
-    if ( common == 3 ) {
-      task3(filename);
+    if ((command == 2 || command == 3) && !has_command1) {
+      std::cout << "### Execute command 1 to load a maze! ###" << std::endl << std::endl;
+      Start();
+      continue;
     }
-
-    if ( common == 4 ) {
+    if (command == 1) {
+      task1(filename);
+      has_command1 = true;
+    } else if (command == 2) {
+      task2(filename);
+    } else if (command == 3) {
+      task3(filename);
+    } else if (command == 4) {
       task4();
     }
     Start();
   }
-
-
   return 0;
-
 }
