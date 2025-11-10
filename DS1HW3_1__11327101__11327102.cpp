@@ -225,7 +225,6 @@ class Maze {
   
 
   bool GoLeft4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) { // r c 放目前的位置
-    std::cout << "path1 " << path << "\n";
     int count = 0;
     while (c - 1 >= 0 && grid[r * column + (c - 1)] != 'O') {
       if ( path < size ) {
@@ -242,7 +241,6 @@ class Maze {
       }
 
       else {
-        std::cout << "path " << path << "\n";
         path--;
         s.pop(r, c);
         break;
@@ -258,7 +256,6 @@ class Maze {
   }
 
   bool GoRight4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) { // r c 放目前的位置 ，向左到撞牆 direction走的方向
-    std::cout << "path1 " << path << "\n";
     int count = 0;
     while (c + 1 < column && grid[r * column + (c + 1)] != 'O') {
       if ( path < size ) {
@@ -275,7 +272,6 @@ class Maze {
       }
 
       else {
-        std::cout << "path " << path << "\n";
         path--;
         s.pop(r, c);
         break;
@@ -290,7 +286,6 @@ class Maze {
     }
   }  
   bool GoUp4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) {
-    std::cout << "path1 " << path << "\n";
     int count = 0;
     while (r - 1 >= 0 && grid[(r - 1) * column + c] != 'O') {
       if ( path < size ) {
@@ -307,7 +302,6 @@ class Maze {
       }
 
       else {
-        std::cout << "path " << path << "\n";
         path--;
         s.pop(r, c);
         break;
@@ -322,7 +316,6 @@ class Maze {
     }
   }  
   bool GoDown4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) {
-    std::cout << "path1 " << path << "\n";
     int count = 0;
     while (r + 1 < row && grid[(r + 1) * column + c] != 'O') {
       if ( path < size ) {
@@ -339,7 +332,6 @@ class Maze {
       }
 
       else {
-        std::cout << "path " << path << "\n";
         path--;
         s.pop(r, c);
         break;
@@ -820,7 +812,6 @@ void task4() {
     int c = 0;
     bool yes = a.Go(s, back);
     int size = s.Length();
-    std::cout << size << "\n";
     infile.close();
     std::ifstream infile(filename);
     infile >> x >> y; // 讀int x,y
