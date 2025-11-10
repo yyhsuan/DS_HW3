@@ -673,7 +673,7 @@ void task1(std::string &filename) {
   Maze a;
   std::cout << "Input a file number: ";
   std::cin >> file_number;
-  filename = "Input" + std::to_string(file_number) + ".txt"; // 轉字串
+  filename = "input" + std::to_string(file_number) + ".txt"; // 轉字串
   std::ifstream infile(filename); // 測試讀檔 github不能run
   char ch = getchar();
   if ( infile ) {
@@ -780,7 +780,7 @@ void task4() {
   Maze a;
   std::cout << "Input a file number: ";
   std::cin >> file_number;
-  filename = "Input" + std::to_string(file_number) + ".txt"; // 轉字串
+  filename = "input" + std::to_string(file_number) + ".txt"; // 轉字串
   char ch = getchar();
   std::ifstream infile(filename); // 測試讀檔 github不能run
   if ( infile ) {
@@ -874,6 +874,7 @@ int main() {
   }
   return 0;
 }
+
 
 
 
