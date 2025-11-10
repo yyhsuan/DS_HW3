@@ -739,6 +739,7 @@ void task2(std::string filename) {
   if ( infile ) {
     std::cout << "Number of G (goals): ";
     std::cin >> number;
+    char ch = getchar();
     std::ifstream infile(filename);
     int x;
     int y;
