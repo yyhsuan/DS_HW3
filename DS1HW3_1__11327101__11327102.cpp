@@ -737,9 +737,34 @@ void task2(std::string filename) {
   Maze a;
   std::ifstream infile(filename);
   if ( infile ) {
-    std::cout << "Number of G (goals): ";
-    std::cin >> number;
-    char ch = getchar();
+    while (true) {
+      std::cout << "Number of G (goals): ";
+      int num = 0;
+      bool has_digit = false;
+      bool invalid = false;
+      char ch;
+      while ((ch = getchar()) != '\n') {
+        if (ch == ' ' || ch == '\t') {
+          continue;  // 忽略空白
+        } else if (ch >= '0' && ch <= '9') {
+          has_digit = true;
+          num = num * 10 + (ch - '0');
+        } else {
+          invalid = true;  // 有非數字
+        }
+      }
+
+      if (!has_digit || invalid) {
+        // 輸入不是純數字
+        continue;
+      }
+      if (num < 1 || num > 100) {
+        std::cout << "### The number must be in [1,100] ###" << std::endl;
+        continue;
+      }
+      number = num;
+      break;
+    }
     std::ifstream infile(filename);
     int x;
     int y;
@@ -902,3 +927,4 @@ int main() {
   }
   return 0;
 }
+
