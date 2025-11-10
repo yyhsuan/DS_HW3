@@ -206,35 +206,7 @@ class Maze {
     }
   }
 
-  bool GoLeft4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) { // r c 放目前的位置
-    int count = 0;
-    while (c - 1 >= 0 && grid[r * column + (c - 1)] != 'O') {
-      if ( path <= size ) {
-        if (grid[r * column + c - 1 ] == 'G') { // 到終點
-          path++;
-          count++;
-          return true;
-        }
-        count++;
-        c--;      
-        s.push(r, c);
-        back.push(r, c);
-        Setgrid(r, c, 'V');
-        path++;
-      }
-
-      else {
-        break;
-      }
-    }
-    if ( count > 0 ) {
-      return true;
-    }
-
-    else {
-      return false;
-    }
-  }
+  
 
   bool GoLeft4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) { // r c 放目前的位置
     int count = 0;
@@ -902,6 +874,7 @@ int main() {
   }
   return 0;
 }
+
 
 
 
