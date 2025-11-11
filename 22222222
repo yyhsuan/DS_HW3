@@ -190,7 +190,7 @@ class Maze {
   }  
   bool GoUp(int &r, int &c, Stack &s, Stack &back) {
     int count = 0;
-    while (r - 1 >= 0 && grid[(r - 1) * column + c] != 'O') {
+    while (r - 1 >= 0 && grid[(r - 1) * (column) + c] != 'O') {
       if (grid[(r - 1) * column + c] == 'G') {
         count++;
         return true;
@@ -211,7 +211,7 @@ class Maze {
   }  
   bool GoDown(int &r, int &c, Stack &s, Stack &back) {
     int count = 0;
-    while (r + 1 < row && grid[(r + 1) * column + c] != 'O') {
+    while (r + 1 < row && grid[(r + 1) * (column) + c] != 'O') {
       if (grid[(r + 1) * column + c] == 'G') {
         count++;
         return true;
@@ -235,6 +235,8 @@ class Maze {
 
   bool GoLeft4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) { // r c 放目前的位置
     int count = 0;
+    r = s.getR();
+    c = s.getC();
     while (c - 1 >= 0 && grid[r * column + (c - 1)] != 'O') {
       bool yes = s.IsSame(r, c - 1);
       if ( !yes ) {
@@ -280,6 +282,8 @@ class Maze {
 
   bool GoRight4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) { // r c 放目前的位置 ，向左到撞牆 direction走的方向
     int count = 0;
+    r = s.getR();
+    c = s.getC();
     while (c + 1 < column && grid[r * column + (c + 1)] != 'O') {
       bool yes = s.IsSame(r, c + 1);
       if ( !yes ) {
@@ -322,6 +326,8 @@ class Maze {
     }
   }  
   bool GoUp4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) {
+    r = s.getR();
+    c = s.getC();
     std::cout << "2R " << r << std::endl;
     std::cout << "2C " << c << std::endl;
     int count = 0;
@@ -369,6 +375,8 @@ class Maze {
   }  
   bool GoDown4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) {
     int count = 0;
+    r = s.getR();
+    c = s.getC();
     while (r + 1 < row && grid[(r + 1) * column + c] != 'O') {
       bool yes = s.IsSame(r + 1, c);
       if ( !yes ) {
@@ -432,9 +440,6 @@ class Maze {
             }
             path--;
             s.pop(r, c);
-            std::cout << "R " << s.getR() << std::endl;
-            std::cout << "C " << s.getC() << std::endl;
-            std::cout << "Now path = " << path << ", size = " << size << std::endl;
           }
         }
       }
@@ -449,9 +454,6 @@ class Maze {
             }
             path--;
             s.pop(r, c);
-            std::cout << "R " << s.getR() << std::endl;
-            std::cout << "C " << s.getC() << std::endl;
-            std::cout << "Now path = " << path << ", size = " << size << std::endl;
           }
         }
       }
@@ -465,17 +467,7 @@ class Maze {
               small.copy(s);
             }
             path--;
-            std::cout << "bR " << s.getR() << std::endl;
-            std::cout << "bC " << s.getC() << std::endl;
-            std::cout << "br " << r << std::endl;
-            std::cout << "bc " << c << std::endl;
             s.pop(r, c);
-            std::cout << "R " << s.getR() << std::endl;
-            std::cout << "C " << s.getC() << std::endl;
-            std::cout << "r " << r << std::endl;
-            std::cout << "c " << c << std::endl;
-            std::cout << "Now path = " << path << ", size = " << size << std::endl;
-            break;
           }
         }
       }
@@ -719,8 +711,12 @@ class Maze {
           }
         }
       }
+      if ( r == row - 1 &&  c == column - 1 ) {
+        return false;
+      }
       if (!move) { // 回上一格
         s.pop(r, c);
+        
       }
     }
     return have_go;
