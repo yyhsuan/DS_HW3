@@ -36,10 +36,10 @@ class Stack {
     head = newNode; 
   }
   void pop(int &r, int &c) {
-    r = head->row;
-    c = head->column;
     Node *temp = head;
     head = head->next;
+    r = head->row;
+    c = head->column;
     delete temp;
   }
 
@@ -236,26 +236,37 @@ class Maze {
   bool GoLeft4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) { // r c 放目前的位置
     int count = 0;
     while (c - 1 >= 0 && grid[r * column + (c - 1)] != 'O') {
-      if ( path < size ) {
-        if (grid[r * column + c - 1 ] == 'G') { // 到終點
+      bool yes = s.IsSame(r, c - 1);
+      if ( !yes ) {
+        if ( path < size ) {
+          std::cout << "Go left";
+          std::cout << "Now path = " << path << ", size = " << size << std::endl;
+          if (grid[r * column + (c - 1) ] == 'G') { // 到終點
+            count++;
+            return true;
+          }
           count++;
-          return true;
+          c--;      
+          s.push(r, c);
+          back.push(r, c);
+          Setgrid(r, c, 'V');
+          path++;
         }
-        count++;
-        c--;      
-        s.push(r, c);
-        back.push(r, c);
-        Setgrid(r, c, 'V');
-        path++;
+
+        else {
+          std::cout << "hahaha" << std::endl;
+          if (grid[r * column + (c - 1) ] != 'G') {
+            std::cout << "aaa" << std::endl;
+            path--;
+            s.pop(r, c);
+            std::cout << "after path = " << path << ", size = " << size << std::endl;
+          }
+          break;
+        }
       }
 
       else {
-        if (grid[r * column + c - 1 ] != 'G') {
-
-          path--;
-          s.pop(r, c);
-        }
-        break;
+        return false;
       }
     }
     if ( count > 0 ) {
@@ -270,25 +281,36 @@ class Maze {
   bool GoRight4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) { // r c 放目前的位置 ，向左到撞牆 direction走的方向
     int count = 0;
     while (c + 1 < column && grid[r * column + (c + 1)] != 'O') {
-      if ( path < size ) {
-        if (grid[r * column + c + 1] == 'G') { // 到終點
-          count++;
-          return true;
+      bool yes = s.IsSame(r, c + 1);
+      if ( !yes ) {
+        if ( path < size ) {
+          std::cout << "Go right";
+          std::cout << "Now path = " << path << ", size = " << size << std::endl;
+          if (grid[r * column + c + 1] == 'G') { // 到終點
+            count++;
+            return true;
+          }
+          count++;                 
+          c++;
+          s.push(r, c);
+          back.push(r, c);
+          Setgrid(r, c, 'V');
+          path++;
         }
-        count++;                 
-        c++;
-        s.push(r, c);
-        back.push(r, c);
-        Setgrid(r, c, 'V');
-        path++;
+
+        else {
+          std::cout << "hahaha" << std::endl;
+          if (grid[r * column + c + 1] != 'G') {
+            std::cout << "aaa" << std::endl;
+            path--;
+            s.pop(r, c);
+          }
+          break;
+        }
       }
 
       else {
-        if (grid[r * column + c + 1] != 'G') {
-          path--;
-          s.pop(r, c);
-        }
-        break;
+        return false;
       }
     }
     if ( count > 0 ) {
@@ -300,27 +322,41 @@ class Maze {
     }
   }  
   bool GoUp4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) {
+    std::cout << "2R " << r << std::endl;
+    std::cout << "2C " << c << std::endl;
     int count = 0;
-    while (r - 1 >= 0 && grid[(r - 1) * column + c] != 'O') {
-      if ( path < size ) {
-        if (grid[(r - 1) * column + c] == 'G') {
+    while (r - 1 >= 0 && grid[(r - 1) * (column) + c] != 'O') {
+      std::cout << "HHHHH " << std::endl;
+      bool yes = s.IsSame(r - 1, c);
+      if ( !yes ) {
+        if ( path < size ) {
+          std::cout << "Go up";
+          std::cout << "Now path = " << path << ", size = " << size << std::endl;
+          if (grid[(r - 1) * column + c] == 'G') {
+            count++;
+            return true;
+          }
           count++;
-          return true;
+          r--;
+          s.push(r, c);
+          back.push(r, c);
+          Setgrid(r, c, 'V');
+          path++;
         }
-        count++;
-        r--;
-        s.push(r, c);
-        back.push(r, c);
-        Setgrid(r, c, 'V');
-        path++;
+
+        else {
+          std::cout << "hahaha" << std::endl;
+          if (grid[(r - 1) * column + c] != 'G') {
+            std::cout << "aaa" << std::endl;
+            path--;
+            s.pop(r, c);
+          }
+          break;
+        }
       }
 
       else {
-        if (grid[(r - 1) * column + c] != 'G') {
-          path--;
-          s.pop(r, c);
-        }
-        break;
+        return false;
       }
     }
     if ( count > 0 ) {
@@ -334,25 +370,36 @@ class Maze {
   bool GoDown4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) {
     int count = 0;
     while (r + 1 < row && grid[(r + 1) * column + c] != 'O') {
-      if ( path < size ) {
-        if (grid[(r + 1) * column + c] == 'G') {
+      bool yes = s.IsSame(r + 1, c);
+      if ( !yes ) {
+        if ( path < size ) {
+          std::cout << "Go down";
+          std::cout << "Now path = " << path << ", size = " << size << std::endl;
+          if (grid[(r + 1) * column + c] == 'G') {
+            count++;
+            return true;
+          }
           count++;
-          return true;
+          r++;
+          s.push(r, c);
+          back.push(r, c);
+          Setgrid(r, c, 'V');
+          path++;
         }
-        count++;
-        r++;
-        s.push(r, c);
-        back.push(r, c);
-        Setgrid(r, c, 'V');
-        path++;
+
+        else {
+          std::cout << "hahaha" << std::endl;
+          if (grid[(r + 1) * column + c] != 'G') {
+            std::cout << "aaa" << std::endl;
+            path--;
+            s.pop(r, c);
+          }
+          break;
+        }
       }
 
       else {
-        if (grid[(r + 1) * column + c] != 'G') {
-          path--;
-          s.pop(r, c);
-        }
-        break;
+        return false;
       }
     }
     if ( count > 0 ) {
@@ -374,76 +421,85 @@ class Maze {
     yes = s.IsSame(r, c + 1);
     while (!s.empty()) {
       bool move = false;
-      if ( !yes ) {
-        if (GoRight4(r, c, s, back, is_small, path)) {
-          move = true; 
-          if ( c < column - 1 ) {
-            if ( grid[r * column + c + 1] == 'G' ) {
-              have_go = true;
-              if ( path <= is_small ) {
-                is_small = path;
-                small.copy(s);
-              }
-              path--;
-              s.pop(r, c);
+      if (GoRight4(r, c, s, back, is_small, path)) {
+        move = true; 
+        if ( c < column - 1 ) {
+          if ( grid[r * column + c + 1] == 'G' ) {
+            have_go = true;
+            if ( path <= is_small ) {
+              is_small = path;
+              small.copy(s);
             }
+            path--;
+            s.pop(r, c);
+            std::cout << "R " << s.getR() << std::endl;
+            std::cout << "C " << s.getC() << std::endl;
+            std::cout << "Now path = " << path << ", size = " << size << std::endl;
           }
         }
       }
-      yes = s.IsSame(r + 1, c);
-      if ( !yes ) {
-        if (GoDown4(r, c, s, back, is_small, path)) { 
-          move = true;
-          if ( r < row - 1) {
-            if ( grid[(r + 1) * column + c] == 'G' ) {
-              have_go = true;
-              if ( path < is_small ) {
-                is_small = path;
-                small.copy(s);
-              }
-              path--;
-              s.pop(r, c);
+      if (GoDown4(r, c, s, back, is_small, path)) { 
+        move = true;
+        if ( r < row - 1) {
+          if ( grid[(r + 1) * column + c] == 'G' ) {
+            have_go = true;
+            if ( path <= is_small ) {
+              is_small = path;
+              small.copy(s);
             }
+            path--;
+            s.pop(r, c);
+            std::cout << "R " << s.getR() << std::endl;
+            std::cout << "C " << s.getC() << std::endl;
+            std::cout << "Now path = " << path << ", size = " << size << std::endl;
           }
         }
       }
-      yes = s.IsSame(r, c - 1);
-      if ( !yes ) {
-        if (GoLeft4(r, c, s, back, is_small, path)) { 
-          move = true;
-          if ( c > 0 ) {
-            if ( grid[r * column + c - 1] == 'G' ) {
-              have_go = true;
-              if ( path <= is_small ) {
-                is_small = path;
-                small.copy(s);
-              }
-              path--;
-              s.pop(r, c);
+      if (GoLeft4(r, c, s, back, is_small, path)) { 
+        move = true;
+        if ( c > 0 ) {
+          if ( grid[r * column + c - 1] == 'G' ) {
+            have_go = true;
+            if ( path <= is_small ) {
+              is_small = path;
+              small.copy(s);
             }
+            path--;
+            std::cout << "bR " << s.getR() << std::endl;
+            std::cout << "bC " << s.getC() << std::endl;
+            std::cout << "br " << r << std::endl;
+            std::cout << "bc " << c << std::endl;
+            s.pop(r, c);
+            std::cout << "R " << s.getR() << std::endl;
+            std::cout << "C " << s.getC() << std::endl;
+            std::cout << "r " << r << std::endl;
+            std::cout << "c " << c << std::endl;
+            std::cout << "Now path = " << path << ", size = " << size << std::endl;
+            break;
           }
         }
       }
-      yes = s.IsSame(r - 1, c);
-      if ( !yes ) {
-        if (GoUp4(r, c, s, back, is_small, path)) { 
-          move = true;
-          if ( r > 0 ) {
-            if ( grid[(r - 1) * column + c] == 'G' ) {
-              have_go = true;
-              if ( path < is_small ) {
-                is_small = path;
-                small.copy(s);
-              }
-              path--;
-              s.pop(r, c);
+      if (GoUp4(r, c, s, back, is_small, path)) { 
+        move = true;
+        if ( r > 0 ) {
+          if ( grid[(r - 1) * column + c] == 'G' ) {
+            have_go = true;
+            if ( path < is_small ) {
+              is_small = path;
+              small.copy(s);
             }
+            path--;
+            s.pop(r, c);
+            std::cout << "Now path = " << path << ", size = " << size << std::endl;
           }
         }
       }
       if (!move) {// 回上一格
         path--;
         s.pop(r, c);
+
+        std::cout << "Now path = " << path << ", size = " << size << std::endl;
+        break;
       }
     }
     size = is_small;
