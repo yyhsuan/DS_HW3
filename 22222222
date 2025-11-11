@@ -36,10 +36,10 @@ class Stack {
     head = newNode; 
   }
   void pop(int &r, int &c) {
-    Node *temp = head;
-    head = head->next;
     r = head->row;
     c = head->column;
+    Node *temp = head;
+    head = head->next;
     delete temp;
   }
 
@@ -190,7 +190,7 @@ class Maze {
   }  
   bool GoUp(int &r, int &c, Stack &s, Stack &back) {
     int count = 0;
-    while (r - 1 >= 0 && grid[(r - 1) * (column) + c] != 'O') {
+    while (r - 1 >= 0 && grid[(r - 1) * column + c] != 'O') {
       if (grid[(r - 1) * column + c] == 'G') {
         count++;
         return true;
@@ -211,7 +211,7 @@ class Maze {
   }  
   bool GoDown(int &r, int &c, Stack &s, Stack &back) {
     int count = 0;
-    while (r + 1 < row && grid[(r + 1) * (column) + c] != 'O') {
+    while (r + 1 < row && grid[(r + 1) * column + c] != 'O') {
       if (grid[(r + 1) * column + c] == 'G') {
         count++;
         return true;
@@ -235,15 +235,11 @@ class Maze {
 
   bool GoLeft4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) { // r c 放目前的位置
     int count = 0;
-    r = s.getR();
-    c = s.getC();
     while (c - 1 >= 0 && grid[r * column + (c - 1)] != 'O') {
-      bool yes = s.IsSame(r, c - 1);
+      bool yes = back.IsSame(r, c - 1);
       if ( !yes ) {
         if ( path < size ) {
-          std::cout << "Go left";
-          std::cout << "Now path = " << path << ", size = " << size << std::endl;
-          if (grid[r * column + (c - 1) ] == 'G') { // 到終點
+          if (grid[r * column + c - 1 ] == 'G') { // 到終點
             count++;
             return true;
           }
@@ -256,18 +252,18 @@ class Maze {
         }
 
         else {
-          std::cout << "hahaha" << std::endl;
-          if (grid[r * column + (c - 1) ] != 'G') {
-            std::cout << "aaa" << std::endl;
+          if (grid[r * column + c - 1 ] != 'G') {
+  
             path--;
             s.pop(r, c);
-            std::cout << "after path = " << path << ", size = " << size << std::endl;
           }
           break;
         }
       }
 
       else {
+        path--;
+        s.pop(r, c);
         return false;
       }
     }
@@ -282,14 +278,10 @@ class Maze {
 
   bool GoRight4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) { // r c 放目前的位置 ，向左到撞牆 direction走的方向
     int count = 0;
-    r = s.getR();
-    c = s.getC();
     while (c + 1 < column && grid[r * column + (c + 1)] != 'O') {
-      bool yes = s.IsSame(r, c + 1);
+      bool yes = back.IsSame(r, c + 1);
       if ( !yes ) {
         if ( path < size ) {
-          std::cout << "Go right";
-          std::cout << "Now path = " << path << ", size = " << size << std::endl;
           if (grid[r * column + c + 1] == 'G') { // 到終點
             count++;
             return true;
@@ -303,9 +295,7 @@ class Maze {
         }
 
         else {
-          std::cout << "hahaha" << std::endl;
           if (grid[r * column + c + 1] != 'G') {
-            std::cout << "aaa" << std::endl;
             path--;
             s.pop(r, c);
           }
@@ -314,6 +304,8 @@ class Maze {
       }
 
       else {
+        path--;
+        s.pop(r, c);
         return false;
       }
     }
@@ -326,16 +318,11 @@ class Maze {
     }
   }  
   bool GoUp4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) {
-    std::cout << "r " << r << std::endl;
-    std::cout << "c " << c << std::endl;
     int count = 0;
-    while (r - 1 >= 0 && grid[(r - 1) * (column) + c] != 'O') {
-      std::cout << "HHHHH " << std::endl;
-      bool yes = s.IsSame(r - 1, c);
+    while (r - 1 >= 0 && grid[(r - 1) * column + c] != 'O') {
+      bool yes = back.IsSame(r - 1, c);
       if ( !yes ) {
         if ( path < size ) {
-          std::cout << "Go up";
-          std::cout << "Now path = " << path << ", size = " << size << std::endl;
           if (grid[(r - 1) * column + c] == 'G') {
             count++;
             return true;
@@ -349,9 +336,7 @@ class Maze {
         }
 
         else {
-          std::cout << "hahaha" << std::endl;
           if (grid[(r - 1) * column + c] != 'G') {
-            std::cout << "aaa" << std::endl;
             path--;
             s.pop(r, c);
           }
@@ -360,6 +345,8 @@ class Maze {
       }
 
       else {
+        path--;
+        s.pop(r, c);
         return false;
       }
     }
@@ -373,14 +360,10 @@ class Maze {
   }  
   bool GoDown4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) {
     int count = 0;
-    r = s.getR();
-    c = s.getC();
     while (r + 1 < row && grid[(r + 1) * column + c] != 'O') {
-      bool yes = s.IsSame(r + 1, c);
+      bool yes = back.IsSame(r + 1, c);
       if ( !yes ) {
         if ( path < size ) {
-          std::cout << "Go down";
-          std::cout << "Now path = " << path << ", size = " << size << std::endl;
           if (grid[(r + 1) * column + c] == 'G') {
             count++;
             return true;
@@ -394,9 +377,7 @@ class Maze {
         }
 
         else {
-          std::cout << "hahaha" << std::endl;
           if (grid[(r + 1) * column + c] != 'G') {
-            std::cout << "aaa" << std::endl;
             path--;
             s.pop(r, c);
           }
@@ -405,9 +386,12 @@ class Maze {
       }
 
       else {
+        path--;
+        s.pop(r, c);
         return false;
       }
     }
+
     if ( count > 0 ) {
       return true;
     }
@@ -420,16 +404,14 @@ class Maze {
   bool Go4(Stack &s, Stack &back, int &size, Stack &small) {
     bool yes = false; // 和走過的r c 相同
     int r = 0, c = 0;
-    int i = 0;
     bool have_go = false; // 找到g
     int is_small = size;
     int path = 1; // 每條的數量
     Setgrid(r, c, 'V');
-    yes = s.IsSame(r, c + 1);
     while (!s.empty()) {
       bool move = false;
       if (GoRight4(r, c, s, back, is_small, path)) {
-        move = true; 
+        move = true;
         if ( c < column - 1 ) {
           if ( grid[r * column + c + 1] == 'G' ) {
             have_go = true;
@@ -447,7 +429,7 @@ class Maze {
         if ( r < row - 1) {
           if ( grid[(r + 1) * column + c] == 'G' ) {
             have_go = true;
-            if ( path <= is_small ) {
+            if ( path < is_small ) {
               is_small = path;
               small.copy(s);
             }
@@ -467,12 +449,7 @@ class Maze {
             }
             path--;
             s.pop(r, c);
-            std::cout << "r " << r << std::endl;
-            std::cout << "c " << c << std::endl;
           }
-        }
-        if ( i > 0 ) {
-          break;
         }
       }
       if (GoUp4(r, c, s, back, is_small, path)) { 
@@ -486,27 +463,18 @@ class Maze {
             }
             path--;
             s.pop(r, c);
-            std::cout << "Now path = " << path << ", size = " << size << std::endl;
           }
         }
-        break;
       }
-      if ( r == row - 1 &&  c == column - 1 ) {
-        return have_go;
-      }
-      
       if (!move) {// 回上一格
         path--;
         s.pop(r, c);
-        std::cout << "Now path = " << path << ", size = " << size << std::endl;
-        break;
       }
-      i++;
     }
     size = is_small;
     return have_go;
   }
-  
+
   bool Go(Stack &s, Stack &back) {
     bool yes = false; // 和走過的r c 相同
     int r = 0, c = 0;
@@ -645,9 +613,6 @@ class Maze {
           }
         }
       }
-      if ( r == row - 1 &&  c == column - 1 ) {
-        return false;
-      }
       if (!move) { // 回上一格
         s.pop(r, c);
       }
@@ -723,12 +688,8 @@ class Maze {
           }
         }
       }
-      if ( r == row - 1 &&  c == column - 1 ) {
-        return false;
-      }
       if (!move) { // 回上一格
         s.pop(r, c);
-        
       }
     }
     return have_go;
@@ -882,11 +843,6 @@ void task3(std::string filename) {
     bool yes = a.Findgoals3(s,number, back, saveG);
     saveG.turnG(a);
     a.print();
-    if ( yes ) {
-      std::cout << "\n";
-      s.turnR(a);
-      a.print();
-    }
     std::cout << "\n";
     std::cout << "The maze has " << number <<  " goal(s) in total.";
   }
