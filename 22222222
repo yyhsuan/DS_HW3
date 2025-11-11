@@ -486,6 +486,10 @@ class Maze {
           }
         }
       }
+      if ( r == row - 1 &&  c == column - 1 ) {
+        return have_go;
+      }
+
       if (!move) {// 回上一格
         path--;
         s.pop(r, c);
@@ -635,6 +639,9 @@ class Maze {
             }
           }
         }
+      }
+      if ( r == row - 1 &&  c == column - 1 ) {
+        return false;
       }
       if (!move) { // 回上一格
         s.pop(r, c);
