@@ -37,10 +37,10 @@ class Stack {
   }
   void pop(int &r, int &c) {
     Node *temp = head;
-    head = head->next;
-    delete temp;
     r = head->row;
     c = head->column;
+    head = head->next;
+    delete temp;
   }
 
   bool IsSame(int r, int c) {
