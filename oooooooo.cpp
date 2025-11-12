@@ -36,11 +36,11 @@ class Stack {
     head = newNode; 
   }
   void pop(int &r, int &c) {
-    r = head->row;
-    c = head->column;
     Node *temp = head;
     head = head->next;
     delete temp;
+    r = head->row;
+    c = head->column;
   }
 
   bool IsSame(int r, int c) {
@@ -613,6 +613,10 @@ class Maze {
           }
         }
       }
+
+      if ( r == row - 1 && c == column - 1 ) {
+        break;
+      }
       if (!move) { // 回上一格
         s.pop(r, c);
       }
@@ -688,6 +692,11 @@ class Maze {
           }
         }
       }
+
+      if ( r == row - 1 && c == column - 1 ) {
+        break;
+      }
+     
       if (!move) { // 回上一格
         s.pop(r, c);
       }
