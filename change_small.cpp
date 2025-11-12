@@ -96,12 +96,18 @@ class Stack {
 
   int getR() {
     Node *temp = head;
-    return temp->row;
+    if ( temp != NULL ) {
+      return temp->row;
+    }
+    return 0;
   }
 
   int getC() {
     Node *temp = head;
-    return temp->column;
+    if ( temp != NULL ) {
+      return temp->row;
+    }
+    return 0;
   }
 
 };
@@ -161,26 +167,34 @@ class Maze {
     bool have_go = false; // 找到g
     int dr[4] = {0, 1, 0, -1};  //  右下左上
     int dc[4] = {1, 0, -1, 0};
+    Setgrid(r, c, 'V');
     while (!s.empty()) {
       bool move = false;
+      int nr = r;
+      int nc = c;
       for (int i = 0; i < 4; i++) {
-        int nr = r + dr[i];
-        int nc = c + dc[i];
-        if ( nr < 0 || nr >= row || nc < 0 || nc >= column ) {
-          continue;
+        nr = r + dr[i];
+        nc = c + dc[i];
+        while ( grid[nr * column + nc] != 'O' && !yes ) {
+          if ( nr < 0 || nr >= row || nc < 0 || nc >= column ) {
+            nr = nr - dr[i];
+            nc = nc - dc[i];
+            break;
+          }
+          yes = back.IsSame(nr, nc);
+          if (grid[nr * column + nc] == 'G') {
+            have_go = true;
+            return have_go;
+          }
+          r = nr;
+          c = nc;
+          s.push(r, c);
+          back.push(r, c);
+          Setgrid(r, c, 'V');
+          move = true;
+          nr = nr + dr[i];
+          nc = nc + dc[i];
         }
-        yes = back.IsSame(nr, nc);
-        if (grid[nr * column + nc] == 'G') {
-          have_go = true;
-          return have_go;
-        }
-        if ( grid[nr * column + nc] == 'O' || !yes ) {
-          continue;
-        }
-        s.push(nr, nc);
-        back.push(nr, nc);
-        Setgrid(r, c, 'V');
-        move = true;
       }
 
       if ( !move ) {
@@ -199,35 +213,41 @@ class Maze {
     int found = 0;
     int dr[4] = {0, 1, 0, -1};  //  右下左上
     int dc[4] = {1, 0, -1, 0};
+    Setgrid(r, c, 'V');
     while (!s.empty()) {
       bool move = false;
+      int nr = r;
+      int nc = c;
       for (int i = 0; i < 4; i++) {
-        int nr = r + dr[i];
-        int nc = c + dc[i];
-        if ( nr < 0 || nr >= row || nc < 0 || nc >= column ) {
-          continue;
-        }
-        yes = back.IsSame(nr, nc);
-        if (grid[nr * column + nc] == 'G') {
-          found++;
-          Setgrid(nr, nc, 'E');
-          saveG.push(nr, nc);
-          if ( found == number ) {
-            have_go = true;
-            return have_go;
+        nr = r + dr[i];
+        nc = c + dc[i];
+        while ( grid[nr * column + nc] != 'O' && !yes ) {
+          if ( nr < 0 || nr >= row || nc < 0 || nc >= column ) {
+            nr = nr - dr[i];
+            nc = nc - dc[i];
+            break;
           }
+          yes = back.IsSame(nr, nc);
+          if (grid[nr * column + nc] == 'G') {
+            std::cout << "r " << r << "\n";
+            std::cout << "c " << r << "\n";
+            found++;
+            Setgrid(nr, nc, 'E');
+            saveG.push(nr, nc);
+            if ( found == number ) {
+              have_go = true;
+              return have_go;
+            }
+          }
+          r = nr;
+          c = nc;
+          s.push(r, c);
+          back.push(r, c);
+          Setgrid(r, c, 'V');
+          move = true;
+          nr = nr + dr[i];
+          nc = nc + dc[i];
         }
-        if ( grid[nr * column + nc] == 'O' || !yes ) {
-          continue;
-        }
-        s.push(nr, nc);
-        back.push(nr, nc);
-        Setgrid(r, c, 'V');
-        move = true;
-      }
-
-      if ( r == row - 1 && c == column - 1 ) {
-        break;
       }
 
       if ( !move ) {
@@ -247,7 +267,10 @@ class Maze {
     int dr[4] = {0, 1, 0, -1};  //  右下左上
     int dc[4] = {1, 0, -1, 0};
     while (!s.empty()) {
+      break;
       bool move = false;
+      std::cout << "r " << r << std::endl;
+      std::cout << "c " << c << std::endl;
       for (int i = 0; i < 4; i++) {
         int nr = r + dr[i];
         int nc = c + dc[i];
@@ -276,6 +299,8 @@ class Maze {
 
       if ( !move ) {
         s.pop(r, c);
+        std::cout << "r " << r << std::endl;
+        std::cout << "c " << c << std::endl;
         r = s.getR();
         c = s.getC();
       }
