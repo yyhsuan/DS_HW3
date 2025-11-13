@@ -894,13 +894,13 @@ void task3(std::string filename) {
     saveG.turnG(a);
     a.print();
     std::cout << "The maze has " << number << " goal(s) in total.\n";
+    std::cout << "\n";
   }
   
   else {
     std::cout << "### Execute command 1 to load a maze! ###";
   }
   std::cout << std::endl;
-  std::cout << "\n";
   return;
 }
 
