@@ -795,6 +795,7 @@ void task1(std::string &filename) {
     std::cout << "input" << file_number << ".txt does not exist!";
   }
   std::cout << std::endl;
+  std::cout << "\n";
   infile.close(); // 關閉檔案
   return;
 }
@@ -802,6 +803,7 @@ void task1(std::string &filename) {
 void task2(std::string filename) { 
   int number;
   Maze a;
+  std::cout << "\n";
   std::ifstream infile(filename);
   if ( infile ) {
     while (true) {
@@ -867,6 +869,7 @@ void task2(std::string filename) {
     std::cout << "### Execute command 1 to load a maze! ###";
   }
   std::cout << std::endl;
+  std::cout << "\n";
   return;
 }
 
@@ -890,13 +893,14 @@ void task3(std::string filename) {
     bool yes = a.Findgoals3(s,number, back, saveG);
     saveG.turnG(a);
     a.print();
-    std::cout << "The maze has " << number << "goal(s) in total.\n";
+    std::cout << "The maze has " << number << " goal(s) in total.\n";
   }
   
   else {
     std::cout << "### Execute command 1 to load a maze! ###";
   }
   std::cout << std::endl;
+  std::cout << "\n";
   return;
 }
 
@@ -935,6 +939,7 @@ void task4() {
     std::cout << "input" << file_number << ".txt does not exist!";
   }
   std::cout << std::endl;
+  std::cout << "\n";
   infile.close(); // 關閉檔案
   return;
 }
