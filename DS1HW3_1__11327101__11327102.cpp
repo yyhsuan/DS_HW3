@@ -155,8 +155,6 @@ class Maze {
   }
 
   bool GoLeft(int &r, int &c, Stack &s, Stack &back) { // r c 放目前的位置
-    //r = s.getR();
-    //c = s.getC();
     int count = 0;
     while (c - 1 >= 0 && grid[r * column + (c - 1)] != 'O') {
       if (grid[r * column + c - 1 ] == 'G') { // 到終點
@@ -179,8 +177,6 @@ class Maze {
   }
 
   bool GoRight(int &r, int &c, Stack &s, Stack &back) { // r c 放目前的位置 ，向左到撞牆 direction走的方向
-    //r = s.getR();
-    //c = s.getC();
     int count = 0;
     while (c + 1 < column && grid[r * column + (c + 1)] != 'O') {
       if (grid[r * column + c + 1] == 'G') { // 到終點
@@ -202,8 +198,6 @@ class Maze {
     }
   }  
   bool GoUp(int &r, int &c, Stack &s, Stack &back) {
-    //r = s.getR();
-    //c = s.getC();
     int count = 0;
     while (r - 1 >= 0 && grid[(r - 1) * column + c] != 'O') {
       if (grid[(r - 1) * column + c] == 'G') {
@@ -225,8 +219,6 @@ class Maze {
     }
   }  
   bool GoDown(int &r, int &c, Stack &s, Stack &back) {
-    //r = s.getR();
-    //c = s.getC();
     int count = 0;
     while (r + 1 < row && grid[(r + 1) * column + c] != 'O') {
       if (grid[(r + 1) * column + c] == 'G') {
@@ -251,13 +243,11 @@ class Maze {
   
 
   bool GoLeft4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) { // r c 放目前的位置
-    //r = s.getR();
-    //c = s.getC();
     int count = 0;
     while (c - 1 >= 0 && grid[r * column + (c - 1)] != 'O') {
       bool yes = s.IsSame(r, c - 1);
       if ( !yes ) {
-        if ( path < size ) {
+        if ( s.Length() < size ) {
           if (grid[r * column + c - 1 ] == 'G') { // 到終點
             count++;
             return true;
@@ -267,14 +257,13 @@ class Maze {
           s.push(r, c);
           back.push(r, c);
           Setgrid(r, c, 'V');
-          path++;
+          s.Length();
         }
 
         else {
           if (grid[r * column + c - 1 ] != 'G') {
-  
-            path--;
             s.pop(r, c);
+            s.Length();
           }
           break;
         }
@@ -296,8 +285,6 @@ class Maze {
   }
 
   bool GoRight4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) { // r c 放目前的位置 ，向右到撞牆
-    //r = s.getR();
-    //c = s.getC();
     int count = 0;
     while (c + 1 < column && grid[r * column + (c + 1)] != 'O') {
       bool yes = s.IsSame(r, c + 1);
@@ -339,8 +326,6 @@ class Maze {
     }
   }  
   bool GoUp4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) {
-    //r = s.getR();
-   // c = s.getC();
     int count = 0;
     while (r - 1 >= 0 && grid[(r - 1) * column + c] != 'O') {
       bool yes = s.IsSame(r - 1, c);
@@ -383,8 +368,6 @@ class Maze {
   }  
   bool GoDown4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) {
     int count = 0;
-    //r = s.getR();
-    //c = s.getC();
     while (r + 1 < row && grid[(r + 1) * column + c] != 'O') {
       bool yes = s.IsSame(r + 1, c);
       if ( !yes ) {
@@ -435,51 +418,39 @@ class Maze {
     Setgrid(r, c, 'V');
     while (!s.empty()) {
       bool move = false;
-      yes = back.IsSame(r, c + 1);
-      if (!yes) {
-        if (GoRight(r, c, s, back)) {
-          move = true;
-          if (c < column - 1) {
-            if (grid[r * column + c + 1] == 'G') {
-              have_go = true;
-              break;
-            }
+      if (GoRight4(r, c, s, back, is_small, path)) {
+        move = true;
+        if (c < column - 1) {
+          if (grid[r * column + c + 1] == 'G') {
+            have_go = true;
+            break;
           }
         }
       }
-      yes = back.IsSame(r + 1, c);
-      if (!yes) {
-        if (GoDown(r, c, s, back)) {
-          move = true;
-          if (r < row - 1) {
-            if (grid[(r + 1) * column + c] == 'G') {
-              have_go = true;
-              break;
-            }
+      if (GoDown4(r, c, s, back, is_small, path)) {
+        move = true;
+        if (r < row - 1) {
+          if (grid[(r + 1) * column + c] == 'G') {
+            have_go = true;
+            break;
           }
         }
       }
-      yes = back.IsSame(r, c - 1);
-      if (!yes) {
-        if (GoLeft(r, c, s, back)) {
-          move = true;
-          if (c > 0) {
-            if (grid[r * column + c - 1] == 'G') {
-              have_go = true;
-              break;
-            }
+      if (GoLeft4(r, c, s, back, is_small, path)) {
+        move = true;
+        if (c > 0) {
+          if (grid[r * column + c - 1] == 'G') {
+            have_go = true;
+            break;
           }
         }
       }
-      yes = back.IsSame(r - 1, c);
-      if (!yes) {
-        if (GoUp(r, c, s, back)) {
-          move = true;
-          if (r > 0) {
-            if (grid[(r - 1) * column + c] == 'G') {
-              have_go = true;
-              break;
-            }
+      if (GoUp4(r, c, s, back, is_small, path)) {
+        move = true;
+        if (r > 0) {
+          if (grid[(r - 1) * column + c] == 'G') {
+            have_go = true;
+            break;
           }
         }
       }
