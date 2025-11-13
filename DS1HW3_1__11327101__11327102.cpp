@@ -893,8 +893,8 @@ void task3(std::string filename) {
     bool yes = a.Findgoals3(s,number, back, saveG);
     saveG.turnG(a);
     a.print();
-    std::cout << "The maze has " << number << " goal(s) in total.\n";
     std::cout << "\n";
+    std::cout << "The maze has " << number << " goal(s) in total.\n";
   }
   
   else {
