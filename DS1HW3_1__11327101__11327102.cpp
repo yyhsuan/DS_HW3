@@ -756,6 +756,7 @@ void Start() {
 void task1(std::string &filename) {
   int file_number;
   Maze a;
+  std::cout << "\n";
   std::cout << "Input a file number: ";
   std::cin >> file_number;
   filename = "input" + std::to_string(file_number) + ".txt"; // 轉字串
@@ -889,6 +890,7 @@ void task3(std::string filename) {
     bool yes = a.Findgoals3(s,number, back, saveG);
     saveG.turnG(a);
     a.print();
+    std::cout << "The maze has " << number << "goal(s) in total.\n";
   }
   
   else {
@@ -902,6 +904,7 @@ void task4() {
   std::string filename;
   int file_number;
   Maze a;
+  std::cout << "\n";
   std::cout << "Input a file number: ";
   std::cin >> file_number;
   filename = "input" + std::to_string(file_number) + ".txt"; // 轉字串
