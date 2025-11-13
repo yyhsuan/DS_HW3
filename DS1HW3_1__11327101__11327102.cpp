@@ -498,6 +498,84 @@ class Maze {
     }
     return have_go;
   }
+
+  bool GPT(Stack &s, Stack &back, int &size, Stack &small) {
+    bool have_go = false;
+    int r = 0, c = 0;
+    int shortest = 9999999; // 記錄最短長度
+    int path = 1;
+    Setgrid(r, c, 'V');      // 標記走過
+
+    while (!s.empty()) {
+        bool move = false;
+        int cur_r = r, cur_c = c;
+
+        // 右
+        if (GoRight4(r, c, s, back, shortest, path)) {
+            move = true;
+            if (grid[r * column + c + 1] == 'G') {
+                have_go = true;
+                if (s.Length() < shortest) {
+                    shortest = s.Length();
+                    small.copy(s); // 存最短路徑
+                }
+                s.pop(r, c);
+                continue;
+            }
+        }
+
+        // 下
+        if (!move && GoDown4(r, c, s, back, shortest, path)) {
+            move = true;
+            if (grid[(r + 1) * column + c] == 'G') {
+                have_go = true;
+                if (s.Length() < shortest) {
+                    shortest = s.Length();
+                    small.copy(s);
+                }
+                s.pop(r, c);
+                continue;
+            }
+        }
+
+        // 左
+        if (!move && GoLeft4(r, c, s, back, shortest, path)) {
+            move = true;
+            if (grid[r * column + c - 1] == 'G') {
+                have_go = true;
+                if (s.Length() < shortest) {
+                    shortest = s.Length();
+                    small.copy(s);
+                }
+                s.pop(r, c);
+                continue;
+            }
+        }
+
+        // 上
+        if (!move && GoUp4(r, c, s, back, shortest, path)) {
+            move = true;
+            if (grid[(r - 1) * column + c] == 'G') {
+                have_go = true;
+                if (s.Length() < shortest) {
+                    shortest = s.Length();
+                    small.copy(s);
+                }
+                s.pop(r, c);
+                continue;
+            }
+        }
+
+        // 若四方向都不能走 -> 回退
+        if (!move) {
+            s.pop(r, c);
+        }
+    }
+
+    size = shortest;
+    return have_go;
+}
+
   bool Go(Stack &s, Stack &back) {
     bool yes = false; // 和走過的r c 相同
     int r = 0, c = 0;
@@ -918,7 +996,7 @@ void task4() {
     Stack s_2;
     Stack back_2;
     int size;
-    bool yes_2 = b.Go4(s_2, back_2, size, small);
+    bool yes_2 = b.GPT(s_2, back_2, size, small);
     b.print();
     if ( yes_2 ) {
       std::cout << "\n";
