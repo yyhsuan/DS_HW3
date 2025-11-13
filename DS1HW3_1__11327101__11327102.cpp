@@ -511,11 +511,11 @@ class Maze {
     while (!s.empty()) {
       bool move = false;
       yes = back.IsSame(r, c + 1);
-      if ( !yes ) {
-        if (GoRight(r, c, s, back)) { 
-          move = true; 
-          if ( c < column - 1 ) {
-            if ( grid[r * column + c + 1] == 'G' ) {
+      if (!yes) {
+        if (GoRight(r, c, s, back)) {
+          move = true;
+          if (c < column - 1) {
+            if (grid[r * column + c + 1] == 'G') {
               have_go = true;
               break;
             }
@@ -523,11 +523,11 @@ class Maze {
         }
       }
       yes = back.IsSame(r + 1, c);
-      if ( !yes ) {
-        if (GoDown(r, c, s, back)) { 
+      if (!yes) {
+        if (GoDown(r, c, s, back)) {
           move = true;
-          if ( r < row - 1) {
-            if ( grid[(r + 1) * column + c] == 'G' ) {
+          if (r < row - 1) {
+            if (grid[(r + 1) * column + c] == 'G') {
               have_go = true;
               break;
             }
@@ -535,11 +535,11 @@ class Maze {
         }
       }
       yes = back.IsSame(r, c - 1);
-      if ( !yes ) {
-        if (GoLeft(r, c, s, back)) { 
+      if (!yes) {
+        if (GoLeft(r, c, s, back)) {
           move = true;
-          if ( c > 0 ) {
-            if ( grid[r * column + c - 1] == 'G' ) {
+          if (c > 0) {
+            if (grid[r * column + c - 1] == 'G') {
               have_go = true;
               break;
             }
@@ -547,18 +547,18 @@ class Maze {
         }
       }
       yes = back.IsSame(r - 1, c);
-      if ( !yes ) {
-        if (GoUp(r, c, s, back)) { 
+      if (!yes) {
+        if (GoUp(r, c, s, back)) {
           move = true;
-          if ( r > 0 ) {
-            if ( grid[(r - 1) * column + c] == 'G' ) {
+          if (r > 0) {
+            if (grid[(r - 1) * column + c] == 'G') {
               have_go = true;
               break;
             }
           }
         }
       }
-      if (!move) {// 回上一格
+      if (!move) { // 回上一格
         s.pop(r, c);
       }
     }
