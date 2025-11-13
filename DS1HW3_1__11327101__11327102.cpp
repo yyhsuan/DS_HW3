@@ -131,6 +131,10 @@ class Maze {
     grid = new char[row * column];  
   }
 
+  void clear() {
+    delete[] grid;
+  }
+
   void load(std::ifstream &infile) { // 載入迷宮資料
     char ch;
     int r = 0;
@@ -502,75 +506,83 @@ class Maze {
   bool GPT(Stack &s, Stack &back, int &size, Stack &small) {
     bool have_go = false;
     int r = 0, c = 0;
-    int shortest = 9999999; // 記錄最短長度
+    int shortest = 9999999;
     int path = 1;
-    Setgrid(r, c, 'V');      // 標記走過
+    Setgrid(r, c, 'V'); // 起點標記
+
+    // 動態建立方向紀錄表
+    int **triedDir = new int*[row];
+    for (int i = 0; i < row; i++) {
+        triedDir[i] = new int[column];
+        for (int j = 0; j < column; j++)
+            triedDir[i][j] = 0;
+    }
 
     while (!s.empty()) {
         bool move = false;
-        int cur_r = r, cur_c = c;
+        int &dir = triedDir[r][c]; //  改變 dir 其實就是改 triedDir
 
-        // 右
-        if (GoRight4(r, c, s, back, shortest, path)) {
-            move = true;
-            if (grid[r * column + c + 1] == 'G') {
-                have_go = true;
-                if (s.Length() < shortest) {
-                    shortest = s.Length();
-                    small.copy(s); // 存最短路徑
+        for (int dir = 0; dir < 4 && !move; dir++) {
+            if (dir == 0 && GoRight4(r, c, s, back, shortest, path)) {
+                move = true;
+                dir++;
+                if (c < column - 1 && grid[r * column + c + 1] == 'G') {
+                    have_go = true;
+                    if (s.Length() < shortest) {
+                        shortest = s.Length();
+                        small.copy(s);
+                    }
+                    s.pop(r, c);
                 }
-                s.pop(r, c);
-                continue;
+            } 
+            else if (dir == 1 && GoDown4(r, c, s, back, shortest, path)) {
+                move = true;
+                dir++;
+                if (r < row - 1 && grid[(r + 1) * column + c] == 'G') {
+                    have_go = true;
+                    if (s.Length() < shortest) {
+                        shortest = s.Length();
+                        small.copy(s);
+                    }
+                    s.pop(r, c);
+                }
+            } 
+            else if (dir == 2 && GoLeft4(r, c, s, back, shortest, path)) {
+                move = true;
+                dir++;
+                if (c > 0 && grid[r * column + c - 1] == 'G') {
+                    have_go = true;
+                    if (s.Length() < shortest) {
+                        shortest = s.Length();
+                        small.copy(s);
+                    }
+                    s.pop(r, c);
+                }
+            } 
+            else if (dir == 3 && GoUp4(r, c, s, back, shortest, path)) {
+                move = true;
+                dir++;
+                if (r > 0 && grid[(r - 1) * column + c] == 'G') {
+                    have_go = true;
+                    if (s.Length() < shortest) {
+                        shortest = s.Length();
+                        small.copy(s);
+                    }
+                    s.pop(r, c);
+                }
             }
         }
 
-        // 下
-        if (!move && GoDown4(r, c, s, back, shortest, path)) {
-            move = true;
-            if (grid[(r + 1) * column + c] == 'G') {
-                have_go = true;
-                if (s.Length() < shortest) {
-                    shortest = s.Length();
-                    small.copy(s);
-                }
-                s.pop(r, c);
-                continue;
-            }
-        }
-
-        // 左
-        if (!move && GoLeft4(r, c, s, back, shortest, path)) {
-            move = true;
-            if (grid[r * column + c - 1] == 'G') {
-                have_go = true;
-                if (s.Length() < shortest) {
-                    shortest = s.Length();
-                    small.copy(s);
-                }
-                s.pop(r, c);
-                continue;
-            }
-        }
-
-        // 上
-        if (!move && GoUp4(r, c, s, back, shortest, path)) {
-            move = true;
-            if (grid[(r - 1) * column + c] == 'G') {
-                have_go = true;
-                if (s.Length() < shortest) {
-                    shortest = s.Length();
-                    small.copy(s);
-                }
-                s.pop(r, c);
-                continue;
-            }
-        }
-
-        // 若四方向都不能走 -> 回退
-        if (!move) {
+        if (!move && dir >= 4) {
+            triedDir[r][c] = 0;
             s.pop(r, c);
         }
     }
+
+    // 清除記憶體
+    for (int i = 0; i < row; i++)
+        delete[] triedDir[i];
+    delete[] triedDir;
 
     size = shortest;
     return have_go;
@@ -859,6 +871,10 @@ void task1(std::string &filename) {
       s.turnR(b);
       b.print();
     }
+    s.clear();
+    back.clear();
+    a.clear();
+    b.clear();
   }
 
   else {
@@ -934,6 +950,11 @@ void task2(std::string filename) {
       s.turnR(b);
       b.print();
     }
+    s.clear();
+    back.clear();
+    saveG.clear();
+    a.clear();
+    b.clear();
   }
   else {
     std::cout << "### Execute command 1 to load a maze! ###";
@@ -965,6 +986,10 @@ void task3(std::string filename) {
     a.print();
     std::cout << "\n";
     std::cout << "The maze has " << number << " goal(s) in total.\n";
+    s.clear();
+    back.clear();
+    saveG.clear();
+    a.clear();
   }
   
   else {
@@ -1003,6 +1028,10 @@ void task4() {
       small.turnR(b);
       b.print();
     }
+    s_2.clear();
+    a.clear();
+    back_2.clear();
+    small.clear();
   }
 
   else {
