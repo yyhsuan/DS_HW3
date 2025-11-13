@@ -56,7 +56,20 @@ class Stack {
     return false;
   }
 
+  void clear() {
+    Node *temp = head;
+    Node *temp2;
+    while ( temp != NULL ) {
+      temp2 = temp->next;
+      delete temp;
+      temp = temp2;
+    }
+    head = NULL;
+    return;
+  } 
+
   void copy(Stack &s) {
+    clear();
     Node *temp = s.head;
     while (temp != NULL ) {
       push(temp->row, temp->column);
@@ -242,37 +255,42 @@ class Maze {
 
   
 
-  bool GoLeft4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) { // r c 放目前的位置
+  bool GoLeft4(int &r, int &c, Stack &s, Stack &back, int &size, int &path, Stack &p) { // r c 放目前的位置
     int count = 0;
+    path = s.Length();
     while (c - 1 >= 0 && grid[r * column + (c - 1)] != 'O') {
+      bool yes_p = p.IsSame(r, c - 1);
       bool yes = s.IsSame(r, c - 1);
-      if ( !yes ) {
-        if ( s.Length() < size ) {
-          if (grid[r * column + c - 1 ] == 'G') { // 到終點
+      if ( !yes_p ) {
+        if ( !yes ) {
+          if ( s.Length() < size ) {
+            if (grid[r * column + c - 1 ] == 'G') { // 到終點
+              count++;
+              return true;
+            }
             count++;
-            return true;
+            c--;      
+            s.push(r, c);
+            back.push(r, c);
+            Setgrid(r, c, 'V');
+            path = s.Length();
           }
-          count++;
-          c--;      
-          s.push(r, c);
-          back.push(r, c);
-          Setgrid(r, c, 'V');
-          path = s.Length();
+
+          else {
+            if (grid[r * column + c - 1 ] != 'G') {
+              p.copy(s);
+              s.pop(r, c);
+              path = s.Length();
+            }
+            break;
+          }
         }
 
         else {
-          if (grid[r * column + c - 1 ] != 'G') {
-            s.pop(r, c);
-            path = s.Length();
-          }
-          break;
+          //s.pop(r, c);
+          path = s.Length();
+          return false;
         }
-      }
-
-      else {
-        s.pop(r, c);
-        path = s.Length();
-        return false;
       }
     }
     if ( count > 0 ) {
@@ -284,38 +302,44 @@ class Maze {
     }
   }
 
-  bool GoRight4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) { // r c 放目前的位置 ，向右到撞牆
+  bool GoRight4(int &r, int &c, Stack &s, Stack &back, int &size, int &path, Stack &p) { // r c 放目前的位置 ，向右到撞牆
     int count = 0;
+    path = s.Length();
     while (c + 1 < column && grid[r * column + (c + 1)] != 'O') {
+      bool yes_p = p.IsSame(r, c + 1);
       bool yes = s.IsSame(r, c + 1);
-      if ( !yes ) {
-        if ( path < size ) {
-          if (grid[r * column + c + 1] == 'G') { // 到終點
-            count++;
-            return true;
+      if ( !yes_p ) {
+        if ( !yes ) {
+          if ( path < size ) {
+            if (grid[r * column + c + 1] == 'G') { // 到終點
+              count++;
+              return true;
+            }
+            count++;                 
+            c++;
+            s.push(r, c);
+            back.push(r, c);
+            Setgrid(r, c, 'V');
+            path = s.Length();
           }
-          count++;                 
-          c++;
-          s.push(r, c);
-          back.push(r, c);
-          Setgrid(r, c, 'V');
-          path = s.Length();
+
+          else {
+            if (grid[r * column + c + 1] != 'G') {
+              p.copy(s);
+              s.pop(r, c);
+              path = s.Length();
+            }
+            break;
+          }
         }
 
         else {
-          if (grid[r * column + c + 1] != 'G') {
-            s.pop(r, c);
-            path = s.Length();
-          }
-          break;
+          //s.pop(r, c);
+          path = s.Length();
+          return false;
         }
       }
 
-      else {
-        s.pop(r, c);
-        path = s.Length();
-        return false;
-      }
     }
     if ( count > 0 ) {
       return true;
@@ -325,38 +349,44 @@ class Maze {
       return false;
     }
   }  
-  bool GoUp4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) {
+  bool GoUp4(int &r, int &c, Stack &s, Stack &back, int &size, int &path, Stack &p) {
     int count = 0;
+    path = s.Length();
     while (r - 1 >= 0 && grid[(r - 1) * column + c] != 'O') {
+      bool yes_p = p.IsSame(r - 1, c);
       bool yes = s.IsSame(r - 1, c);
-      if ( !yes ) {
-        if ( path < size ) {
-          if (grid[(r - 1) * column + c] == 'G') {
+      if ( !yes_p ) {
+        if ( !yes ) {
+          if ( path < size ) {
+            if (grid[(r - 1) * column + c] == 'G') {
+              count++;
+              return true;
+            }
             count++;
-            return true;
+            r--;
+            s.push(r, c);
+            back.push(r, c);
+            Setgrid(r, c, 'V');
+            path = s.Length();
           }
-          count++;
-          r--;
-          s.push(r, c);
-          back.push(r, c);
-          Setgrid(r, c, 'V');
-          path = s.Length();
+
+          else {
+            if (grid[(r - 1) * column + c] != 'G') {
+              p.copy(s);
+              s.pop(r, c);
+              path = s.Length();
+            }
+            break;
+          }
         }
 
         else {
-          if (grid[(r - 1) * column + c] != 'G') {
-            s.pop(r, c);
-            path = s.Length();
-          }
-          break;
+          //s.pop(r, c);
+          path = s.Length();
+          return false;
         }
       }
 
-      else {
-        s.pop(r, c);
-        path = s.Length();
-        return false;
-      }
     }
     if ( count > 0 ) {
       return true;
@@ -366,35 +396,41 @@ class Maze {
       return false;
     }
   }  
-  bool GoDown4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) {
+  bool GoDown4(int &r, int &c, Stack &s, Stack &back, int &size, int &path, Stack &p) {
+    path = s.Length();
     int count = 0;
     while (r + 1 < row && grid[(r + 1) * column + c] != 'O') {
+      bool yes_p = p.IsSame(r + 1, c);
       bool yes = s.IsSame(r + 1, c);
-      if ( !yes ) {
-        if ( path < size ) {
-          if (grid[(r + 1) * column + c] == 'G') {
+      if ( !yes_p ) {
+        if ( !yes ) {
+          if ( path < size ) {
+            if (grid[(r + 1) * column + c] == 'G') {
+              count++;
+              return true;
+            }
             count++;
-            return true;
-          }
-          count++;
-          r++;
-          s.push(r, c);
-          back.push(r, c);
-          Setgrid(r, c, 'V');
-          path = s.Length();
-        }
-
-        else {
-          if (grid[(r + 1) * column + c] != 'G') {
-            s.pop(r, c);
+            r++;
+            s.push(r, c);
+            back.push(r, c);
+            Setgrid(r, c, 'V');
             path = s.Length();
           }
-          break;
+
+          else {
+            if (grid[(r + 1) * column + c] != 'G') {
+              p.copy(s);
+              s.pop(r, c);
+              path = s.Length();
+              break;
+            }
+            break;
+          }
         }
       }
 
       else {
-        s.pop(r, c);
+        //s.pop(r, c);
         path = s.Length();
         return false;
       }
@@ -412,6 +448,7 @@ class Maze {
   bool Go4(Stack &s, Stack &back, int &size, Stack &small) {
     bool yes = false; // 和走過的r c 相同
     int r = 0, c = 0;
+    Stack p;
     bool have_go = false; // 找到g
     size = 9999999;
     int is_small = size;
@@ -419,43 +456,58 @@ class Maze {
     Setgrid(r, c, 'V');
     while (!s.empty()) {
       bool move = false;
-      if (GoRight4(r, c, s, back, is_small, path)) {
+      std::cout << "r " << r << "\n";
+      std::cout << "c " << c << "\n";
+      if (GoRight4(r, c, s, back, is_small, path, p)) {
         move = true;
         if (c < column - 1) {
           if (grid[r * column + c + 1] == 'G') {
             have_go = true;
-            break;
+            if ( s.Length() < is_small ) {
+              is_small = s.Length();
+            }
+            s.pop(r, c);
           }
         }
       }
-      if (GoDown4(r, c, s, back, is_small, path)) {
+      if (GoDown4(r, c, s, back, is_small, path, p)) {
         move = true;
         if (r < row - 1) {
           if (grid[(r + 1) * column + c] == 'G') {
             have_go = true;
-            break;
+            if ( s.Length() < is_small ) {
+              is_small = s.Length();
+            }
+            s.pop(r, c);
           }
         }
       }
-      if (GoLeft4(r, c, s, back, is_small, path)) {
+      if (GoLeft4(r, c, s, back, is_small, path, p)) {
         move = true;
         if (c > 0) {
           if (grid[r * column + c - 1] == 'G') {
             have_go = true;
-            break;
+            if ( s.Length() < is_small ) {
+              is_small = s.Length();
+            }
+            s.pop(r, c);
           }
         }
       }
-      if (GoUp4(r, c, s, back, is_small, path)) {
+      if (GoUp4(r, c, s, back, is_small, path, p)) {
         move = true;
         if (r > 0) {
           if (grid[(r - 1) * column + c] == 'G') {
             have_go = true;
-            break;
+            if ( s.Length() < is_small ) {
+              is_small = s.Length();
+            }
+            s.pop(r, c);
           }
         }
       }
       if (!move) { // 回上一格
+        p.copy(s);
         s.pop(r, c);
         path = s.Length();
       }
