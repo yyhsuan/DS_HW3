@@ -434,76 +434,59 @@ class Maze {
     int path = 1; // 每條的數量
     Setgrid(r, c, 'V');
     while (!s.empty()) {
-      std::cout << "path  " << path << std::endl;
-      std::cout << "r  " << r << std::endl;
-      std::cout << "c  " << c << std::endl;
       bool move = false;
-      if (GoRight4(r, c, s, back, is_small, path)) {
-        move = true;
-        if ( c < column - 1 ) {
-          if ( grid[r * column + c + 1] == 'G' ) {
-            have_go = true;
-            if ( path <= is_small ) {
-              is_small = path;
-              small.copy(s);
+      yes = back.IsSame(r, c + 1);
+      if (!yes) {
+        if (GoRight(r, c, s, back)) {
+          move = true;
+          if (c < column - 1) {
+            if (grid[r * column + c + 1] == 'G') {
+              have_go = true;
+              break;
             }
-            path--;
-            s.pop(r, c);
           }
         }
       }
-      if (GoDown4(r, c, s, back, is_small, path)) { 
-        move = true;
-        if ( r < row - 1) {
-          if ( grid[(r + 1) * column + c] == 'G' ) {
-            have_go = true;
-            if ( path < is_small ) {
-              is_small = path;
-              small.copy(s);
+      yes = back.IsSame(r + 1, c);
+      if (!yes) {
+        if (GoDown(r, c, s, back)) {
+          move = true;
+          if (r < row - 1) {
+            if (grid[(r + 1) * column + c] == 'G') {
+              have_go = true;
+              break;
             }
-            path--;
-            s.pop(r, c);
           }
         }
       }
-      if (GoLeft4(r, c, s, back, is_small, path)) { 
-        move = true;
-        if ( c > 0 ) {
-          if ( grid[r * column + c - 1] == 'G' ) {
-            have_go = true;
-            if ( path <= is_small ) {
-              is_small = path;
-              small.copy(s);
+      yes = back.IsSame(r, c - 1);
+      if (!yes) {
+        if (GoLeft(r, c, s, back)) {
+          move = true;
+          if (c > 0) {
+            if (grid[r * column + c - 1] == 'G') {
+              have_go = true;
+              break;
             }
-            path--;
-            s.pop(r, c);
           }
         }
       }
-      if (GoUp4(r, c, s, back, is_small, path)) { 
-        move = true;
-        if ( r > 0 ) {
-          if ( grid[(r - 1) * column + c] == 'G' ) {
-            have_go = true;
-            if ( path < is_small ) {
-              is_small = path;
-              small.copy(s);
+      yes = back.IsSame(r - 1, c);
+      if (!yes) {
+        if (GoUp(r, c, s, back)) {
+          move = true;
+          if (r > 0) {
+            if (grid[(r - 1) * column + c] == 'G') {
+              have_go = true;
+              break;
             }
-            path--;
-            s.pop(r, c);
           }
         }
       }
-      if ( r == row - 1 && c == column - 1 ) {// 回上一格
-        break;
-      }
-
-      if (!move) {// 回上一格
-        path--;
+      if (!move) { // 回上一格
         s.pop(r, c);
       }
     }
-    size = is_small;
     return have_go;
   }
   bool Go(Stack &s, Stack &back) {
@@ -792,7 +775,7 @@ void task1(std::string &filename) {
   }
 
   else {
-    std::cout << "input" << file_number << ".txt does not exist!";
+    std::cout << "\ninput" << file_number << ".txt does not exist!";
   }
   std::cout << std::endl;
   std::cout << "\n";
