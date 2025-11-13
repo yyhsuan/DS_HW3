@@ -36,11 +36,13 @@ class Stack {
     head = newNode; 
   }
   void pop(int &r, int &c) {
-    r = head->row;
-    c = head->column;
     Node *temp = head;
     head = head->next;
     delete temp;
+    if ( !empty() ) {
+      r = head->row;
+      c = head->column;
+    }
   }
 
   bool IsSame(int r, int c) {
@@ -65,6 +67,7 @@ class Stack {
 
   void turnR(Maze &a);  // 只宣告 // 改R
   void turnG(Maze &a); // 只宣告 // 改G
+  void turnE(Maze &a, Stack &back);
   int Length() {
     int count = 0;
     Node *temp = head;
@@ -172,7 +175,7 @@ class Maze {
 
     else {
       return false;
-    }
+    } 
   }
 
   bool GoRight(int &r, int &c, Stack &s, Stack &back) { // r c 放目前的位置 ，向左到撞牆 direction走的方向
@@ -599,7 +602,7 @@ class Maze {
             if (grid[(r + 1) * column + c] == 'G') {
               found++;
               Setgrid(r + 1, c, 'E');
-              saveG.push(r , c + 1);
+              saveG.push(r + 1 , c);
               if (found == number) {
                 have_go = true;
                 break;
@@ -616,7 +619,7 @@ class Maze {
             if (grid[r * column + c - 1] == 'G') {
               found++;
               Setgrid(r, c - 1, 'E');
-              saveG.push(r , c + 1);
+              saveG.push(r , c - 1);
               if (found == number) {
                 have_go = true;
                 break;
@@ -633,7 +636,7 @@ class Maze {
             if (grid[(r - 1) * column + c] == 'G') {
               found++;
               Setgrid(r - 1, c, 'E');
-              saveG.push(r , c + 1);
+              saveG.push(r - 1 , c);
               if (found == number) {
                 have_go = true;
                 break;
@@ -678,7 +681,7 @@ class Maze {
             if (grid[(r + 1) * column + c] == 'G') {
               number++;
               Setgrid(r + 1, c, 'E');
-              saveG.push(r , c + 1);
+              saveG.push(r + 1, c);
               have_go = true;
             }
           }
@@ -692,7 +695,7 @@ class Maze {
             if (grid[r * column + c - 1] == 'G') {
               number++;
               Setgrid(r, c - 1, 'E');
-              saveG.push(r , c + 1);
+              saveG.push(r , c - 1);
               have_go = true;
             }
           }
@@ -706,7 +709,7 @@ class Maze {
             if (grid[(r - 1) * column + c] == 'G') {
               number++;
               Setgrid(r - 1, c, 'E');
-              saveG.push(r , c + 1);
+              saveG.push(r - 1, c);
               have_go = true;
             }
           }
@@ -771,10 +774,19 @@ void task1(std::string &filename) {
     int c = 0;
     bool yes = a.Go(s, back);
     a.print();
+    infile.close();
+    Maze b;
+    std::ifstream infile(filename);
+    int u;
+    int o;
+    infile >> u >> o; // 讀int x,y
+    infile.get();
+    b.initial(o, u);
+    b.load(infile);
     if ( yes ) {
       std::cout << "\n";
-      s.turnR(a);
-      a.print();
+      s.turnR(b);
+      b.print();
     }
   }
 
@@ -834,10 +846,20 @@ void task2(std::string filename) {
     bool yes = a.Findgoals(s,number, back, saveG);
     saveG.turnG(a);
     a.print();
+    infile.close();
+    Maze b;
+    std::ifstream filet(filename);
+    int u;
+    int o;
+    filet >> u >> o; // 讀int x,y
+    filet.get();
+    b.initial(o, u);
+    b.load(filet);
+    saveG.turnG(b);
     if ( yes ) {
       std::cout << "\n";
-      s.turnR(a);
-      a.print();
+      s.turnR(b);
+      b.print();
     }
   }
   else {
@@ -867,9 +889,8 @@ void task3(std::string filename) {
     bool yes = a.Findgoals3(s,number, back, saveG);
     saveG.turnG(a);
     a.print();
-    std::cout << "\n";
-    std::cout << "The maze has " << number <<  " goal(s) in total.";
   }
+  
   else {
     std::cout << "### Execute command 1 to load a maze! ###";
   }
