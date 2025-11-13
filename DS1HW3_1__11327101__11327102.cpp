@@ -444,8 +444,8 @@ class Maze {
     Setgrid(r, c, 'V');
     while (!s.empty()) {
       bool move = false;
-      std::cout << "r " << r << "\n";
-      std::cout << "c " << c << "\n";
+      //std::cout << "r " << r << "\n";
+      //std::cout << "c " << c << "\n";
       if (GoRight4(r, c, s, back, is_small, path)) {
         move = true;
         if (c < column - 1) {
@@ -1021,7 +1021,7 @@ void task4() {
     Stack s_2;
     Stack back_2;
     int size;
-    bool yes_2 = b.GPT(s_2, back_2, size, small);
+    bool yes_2 = b.Go4(s_2, back_2, size, small);
     b.print();
     if ( yes_2 ) {
       std::cout << "\n";
