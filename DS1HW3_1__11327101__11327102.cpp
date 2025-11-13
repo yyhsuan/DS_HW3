@@ -257,21 +257,21 @@ class Maze {
           s.push(r, c);
           back.push(r, c);
           Setgrid(r, c, 'V');
-          s.Length();
+          path = s.Length();
         }
 
         else {
           if (grid[r * column + c - 1 ] != 'G') {
             s.pop(r, c);
-            s.Length();
+            path = s.Length();
           }
           break;
         }
       }
 
       else {
-        path--;
         s.pop(r, c);
+        path = s.Length();
         return false;
       }
     }
@@ -299,21 +299,21 @@ class Maze {
           s.push(r, c);
           back.push(r, c);
           Setgrid(r, c, 'V');
-          path++;
+          path = s.Length();
         }
 
         else {
           if (grid[r * column + c + 1] != 'G') {
-            path--;
             s.pop(r, c);
+            path = s.Length();
           }
           break;
         }
       }
 
       else {
-        path--;
         s.pop(r, c);
+        path = s.Length();
         return false;
       }
     }
@@ -340,21 +340,21 @@ class Maze {
           s.push(r, c);
           back.push(r, c);
           Setgrid(r, c, 'V');
-          path++;
+          path = s.Length();
         }
 
         else {
           if (grid[(r - 1) * column + c] != 'G') {
-            path--;
             s.pop(r, c);
+            path = s.Length();
           }
           break;
         }
       }
 
       else {
-        path--;
         s.pop(r, c);
+        path = s.Length();
         return false;
       }
     }
@@ -381,21 +381,21 @@ class Maze {
           s.push(r, c);
           back.push(r, c);
           Setgrid(r, c, 'V');
-          path++;
+          path = s.Length();
         }
 
         else {
           if (grid[(r + 1) * column + c] != 'G') {
-            path--;
             s.pop(r, c);
+            path = s.Length();
           }
           break;
         }
       }
 
       else {
-        path--;
         s.pop(r, c);
+        path = s.Length();
         return false;
       }
     }
@@ -413,6 +413,7 @@ class Maze {
     bool yes = false; // 和走過的r c 相同
     int r = 0, c = 0;
     bool have_go = false; // 找到g
+    size = 9999999;
     int is_small = size;
     int path = 1; // 每條的數量
     Setgrid(r, c, 'V');
@@ -456,6 +457,7 @@ class Maze {
       }
       if (!move) { // 回上一格
         s.pop(r, c);
+        path = s.Length();
       }
     }
     return have_go;
