@@ -336,7 +336,6 @@ class Maze {
         }
 
         else {
-          //s.pop(r, c);
           path = s.Length();
           return false;
         }
@@ -388,7 +387,6 @@ class Maze {
         }
 
         else {
-          //s.pop(r, c);
           path = s.Length();
           return false;
         }
@@ -440,7 +438,6 @@ class Maze {
         }
 
         else {
-          //s.pop(r, c);
           path = s.Length();
           return false;
         }
@@ -493,7 +490,6 @@ class Maze {
         }
 
         else {
-          //s.pop(r, c);
           path = s.Length();
           return false;
         }
@@ -1101,6 +1097,7 @@ int main() {
   }
   return 0;
 }
+
 
 
 
