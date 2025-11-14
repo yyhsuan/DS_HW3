@@ -2,8 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-// 建立/寫入檔案	用 ofstream	ofstream file("a.txt")
-// 讀取檔https://ieet2022survey3.cycu.edu.tw/MySurvey案	用 ifstream	ifstream file("a.txt")       
+  
 class Maze;
 class Stack {
  private:
@@ -798,7 +797,7 @@ class Maze {
   }
 };
 
-void Stack::turnR(Maze &a) {  // 改R 因為編譯器的問題，所以放在這
+void Stack::turnR(Maze &a) {  // 改R
   Node *temp = head;
   while (temp != NULL) {
     a.Setgrid(temp->row, temp->column, 'R');
@@ -807,9 +806,9 @@ void Stack::turnR(Maze &a) {  // 改R 因為編譯器的問題，所以放在這
   return;
 }
 
-void Stack::turnG(Maze &a) {  // 改G 因為編譯器的問題，所以放在這
+void Stack::turnG(Maze &a) {  // 改G
   Node *temp = head;
-  while (temp->next != NULL) { // (0,0)不是G
+  while (temp->next != NULL) { // 
     a.Setgrid(temp->row, temp->column, 'G');
     temp = temp->next;
   }
@@ -1097,6 +1096,7 @@ int main() {
   }
   return 0;
 }
+
 
 
 
