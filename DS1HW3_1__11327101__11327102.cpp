@@ -300,8 +300,6 @@ class Maze {
     }
   }
 
-  
-
   bool GoLeft4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) { // r c 放目前的位置
     int count = 0;
     path = s.Length();
@@ -1096,6 +1094,7 @@ int main() {
   }
   return 0;
 }
+
 
 
 
