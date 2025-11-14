@@ -566,7 +566,6 @@ class Maze {
           }
         }
       }
-      int _r = r , _c = c;
       if (GoDown4(r, c, s, back, is_small, path)) {
         move = true;
         if (r < row - 1) {
@@ -579,9 +578,6 @@ class Maze {
             s.pop(r, c);
           }
         }
-      }
-      if (r==_r && c == _c) {
-        move=false;
       }
       if (GoLeft4(r, c, s, back, is_small, path)) {
         move = true;
@@ -1133,5 +1129,4 @@ int main() {
   }
   return 0;
 }
-
 
