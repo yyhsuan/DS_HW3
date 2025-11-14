@@ -86,6 +86,7 @@ class Stack {
 
   void turnR(Maze &a);  // 改R
   void turnG(Maze &a);  // 改G
+
   int Length() {
     int count = 0;
     Node *temp = head;
@@ -159,7 +160,6 @@ class Stack {
     }
     return;
   }
-
 };
 
 class Maze {
@@ -257,10 +257,10 @@ class Maze {
       return false;
     }
   }  
-  bool GoUp(int &r, int &c, Stack &s, Stack &back) {
+  bool GoUp(int &r, int &c, Stack &s, Stack &back) { // r c 放目前的位置
     int count = 0;
     while (r - 1 >= 0 && grid[(r - 1) * column + c] != 'O') {
-      if (grid[(r - 1) * column + c] == 'G') {
+      if (grid[(r - 1) * column + c] == 'G') { // 到終點
         count++;
         return true;
       }
@@ -278,10 +278,10 @@ class Maze {
       return false;
     }
   }  
-  bool GoDown(int &r, int &c, Stack &s, Stack &back) {
+  bool GoDown(int &r, int &c, Stack &s, Stack &back) { // r c 放目前的位置
     int count = 0;
     while (r + 1 < row && grid[(r + 1) * column + c] != 'O') {
-      if (grid[(r + 1) * column + c] == 'G') {
+      if (grid[(r + 1) * column + c] == 'G') { // 到終點
         count++;
         return true;
       }
@@ -1094,6 +1094,7 @@ int main() {
   }
   return 0;
 }
+
 
 
 
