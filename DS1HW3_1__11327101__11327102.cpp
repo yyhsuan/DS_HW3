@@ -986,6 +986,7 @@ void task3(std::string filename) {
     std::cout << "### Execute command 1 to load a maze! ###";
   }
   std::cout << std::endl;
+  std::cout << std::endl;
   return;
 }
 
