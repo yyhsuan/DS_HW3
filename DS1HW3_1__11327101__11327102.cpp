@@ -842,13 +842,13 @@ void Start() {
 }
 
 void task1(std::string &filename) {
-  int file_number;
+  int file_number; // 檔案數字
   Maze a;
   std::cout << "\n";
   std::cout << "Input a file number: ";
   std::cin >> file_number;
   filename = "input" + std::to_string(file_number) + ".txt"; // 轉字串
-  std::ifstream infile(filename); // 測試讀檔 github不能run
+  std::ifstream infile(filename); // 讀檔
   char ch = getchar();
   if ( infile ) {
     int x;
@@ -864,7 +864,7 @@ void task1(std::string &filename) {
     bool yes = a.Go(s, back);
     a.print();
     infile.close();
-    Maze b;
+    Maze b; // 因為之前迷宮有v，所以直接用新迷宮轉R
     std::ifstream infile(filename);
     int u;
     int o;
@@ -883,7 +883,7 @@ void task1(std::string &filename) {
     b.clear();
   }
 
-  else {
+  else { // 沒這檔案
     std::cout << "\ninput" << file_number << ".txt does not exist!";
   }
   std::cout << std::endl;
@@ -893,7 +893,7 @@ void task1(std::string &filename) {
 }
 
 void task2(std::string filename) { 
-  int number;
+  int number; // 我要找多少G
   Maze a;
   std::cout << "\n";
   std::ifstream infile(filename);
@@ -942,7 +942,7 @@ void task2(std::string filename) {
     saveG.turnG(a);
     a.print();
     infile.close();
-    Maze b;
+    Maze b; // 因為之前迷宮有v，所以直接用新迷宮轉R
     std::ifstream filet(filename);
     int u;
     int o;
@@ -950,7 +950,7 @@ void task2(std::string filename) {
     filet.get();
     b.initial(o, u);
     b.load(filet);
-    saveG.turnG(b);
+    saveG.turnG(b); // 存G點轉迷宮G
     if ( yes ) {
       std::cout << "\n";
       s.turnR(b);
@@ -962,7 +962,7 @@ void task2(std::string filename) {
     a.clear();
     b.clear();
   }
-  else {
+  else { // 你沒輸1迷宮
     std::cout << "### Execute command 1 to load a maze! ###";
   }
   std::cout << std::endl;
@@ -998,7 +998,7 @@ void task3(std::string filename) {
     a.clear();
   }
   
-  else {
+  else { // 你沒輸1迷宮
     std::cout << "### Execute command 1 to load a maze! ###";
   }
   std::cout << std::endl;
@@ -1014,7 +1014,7 @@ void task4() {
   std::cin >> file_number;
   filename = "input" + std::to_string(file_number) + ".txt"; // 轉字串
   char ch = getchar();
-  std::ifstream infile(filename); // 測試讀檔 github不能run
+  std::ifstream infile(filename); // 讀檔
   if ( infile ) {
     int x,y;
     Stack small;
@@ -1029,7 +1029,7 @@ void task4() {
     int size;
     bool yes_2 = b.Go4(s_2, back_2, size, small);
     b.print();
-    Maze c;
+    Maze c; // 因為之前迷宮有v，所以直接用新迷宮轉R
     infile.close();
     std::ifstream yy(filename);
     yy >> x >> y; // 讀int x,y
@@ -1044,7 +1044,7 @@ void task4() {
       std::cout << "\nShortest path length = " << path_small_size + 1;
     }
 
-    else {
+    else { // 沒G
       std::cout << "\n### There is no path to find a goal! ###";
     }
     
@@ -1110,6 +1110,7 @@ int main() {
   }
   return 0;
 }
+
 
 
 
