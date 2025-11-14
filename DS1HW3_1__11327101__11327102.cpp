@@ -86,7 +86,6 @@ class Stack {
 
   void turnR(Maze &a);  // 改R
   void turnG(Maze &a);  // 改G
-  void turnE(Maze &a, Stack &back);
   int Length() {
     int count = 0;
     Node *temp = head;
@@ -1126,5 +1125,6 @@ int main() {
   }
   return 0;
 }
+
 
 
