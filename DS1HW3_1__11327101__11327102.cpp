@@ -1062,7 +1062,7 @@ int main() {
   char ch;
   int command = 0;
   bool has_command1; // 執行過任務一
-  Start();
+  Start(); // 印選單
   while (true) {
     command = 0;
     bool has_digit = false; // 已經有數字
@@ -1081,7 +1081,7 @@ int main() {
         invalid = true;
       }
     }
-    // 處理非法輸入
+
     if (invalid || (!has_digit)) {
       std::cout << "Command does not exist!" << std::endl << std::endl;
       Start();
@@ -1109,6 +1109,7 @@ int main() {
   }
   return 0;
 }
+
 
 
 
