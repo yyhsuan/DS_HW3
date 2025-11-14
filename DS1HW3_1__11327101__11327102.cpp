@@ -1068,7 +1068,7 @@ void task4() {
     }
 
     else {
-      std::cout << "\nShortest path length = ";
+      std::cout << "\n### There is no path to find a goal! ###";
     }
     
   }
@@ -1133,4 +1133,5 @@ int main() {
   }
   return 0;
 }
+
 
