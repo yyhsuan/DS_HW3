@@ -10,7 +10,7 @@ class Stack {
   struct Node{
     int row;
     int column;
-    Node *next;  // 感覺原本少打*(?
+    Node *next;
     bool right = false;
     bool left = false;
     bool up = false;
@@ -31,8 +31,6 @@ class Stack {
  public:
   Stack() {
     Node *first = new Node(0,0); // （最左邊上面的那一格）
-    // 上面那行是不是要改成Node *first = new Node(0,0); (?
-    // 對
     head = first;
   }
   bool empty() {
@@ -86,8 +84,8 @@ class Stack {
     return;
   }
 
-  void turnR(Maze &a);  // 只宣告 // 改R
-  void turnG(Maze &a); // 只宣告 // 改G
+  void turnR(Maze &a);  // 改R
+  void turnG(Maze &a);  // 改G
   void turnE(Maze &a, Stack &back);
   int Length() {
     int count = 0;
@@ -194,10 +192,10 @@ class Maze {
  private:
   int row;
   int column;
-  char *grid;   // 這不知道對不對 反正要有上面那兩個?
+  char *grid;
 
  public:
-  void initial(int r, int c) {    // 看要不要改成建構子
+  void initial(int r, int c) {
     row = r;
     column = c;
     grid = new char[row * column];  
@@ -211,7 +209,7 @@ class Maze {
     char ch;
     int r = 0;
     int c = 0;
-    while (infile.get(ch)) {   // 每次讀一個字元到 c
+    while (infile.get(ch)) {   // 每次讀一個字元
       if ( ch != '\n' ) {
         grid[r * column + c] = ch;
         c++;
@@ -225,7 +223,6 @@ class Maze {
     return;
   }
 
-  // print我有修一下 不對再改回去
   void print() { // 印出迷宮資料
     for (int r = 0; r < row; r++) {
       for (int c = 0; c < column; c++) {
@@ -239,7 +236,7 @@ class Maze {
     return grid[r * column + c];
   }
 
-  void Setgrid(int r, int c, char letter) { // 改這格的字母(走過改V,路徑改R)
+  void Setgrid(int r, int c, char letter) { // 改這格的字母
     grid[r * column + c] = letter; 
   }
 
@@ -265,7 +262,7 @@ class Maze {
     } 
   }
 
-  bool GoRight(int &r, int &c, Stack &s, Stack &back) { // r c 放目前的位置 ，向左到撞牆 direction走的方向
+  bool GoRight(int &r, int &c, Stack &s, Stack &back) { // r c 放目前的位置
     int count = 0;
     while (c + 1 < column && grid[r * column + (c + 1)] != 'O') {
       if (grid[r * column + c + 1] == 'G') { // 到終點
@@ -759,7 +756,7 @@ class Maze {
     return have_go;
   }
 
-  bool Findgoals3(Stack &s, int &number, Stack &back, Stack &saveG) { // saveG 存G點位置
+  bool Findgoals3(Stack &s, int &number, Stack &back, Stack &saveG) { // saveG 存G的位置
     bool yes = false;
     int r = 0, c = 0;
     bool have_go = false; 
@@ -1129,4 +1126,5 @@ int main() {
   }
   return 0;
 }
+
 
