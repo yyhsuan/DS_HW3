@@ -105,22 +105,6 @@ class Stack {
     return;
   }
 
-  int getR() {
-    Node *temp = head;
-    if ( temp != NULL ) {
-      return temp->row;
-    }
-    return 0;
-  }
-
-  int getC() {
-    Node *temp = head;
-    if ( temp != NULL ) {
-      return temp->column;
-    }
-    return 0;
-  }
-
   bool getRight() {
     Node *temp = head;
     if ( temp != NULL ) {
@@ -1125,6 +1109,7 @@ int main() {
   }
   return 0;
 }
+
 
 
 
