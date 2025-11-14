@@ -11,6 +11,7 @@ class Stack {
     int row;
     int column;
     Node *next;
+    // 用於任務四
     bool right = false;
     bool left = false;
     bool up = false;
@@ -1109,6 +1110,7 @@ int main() {
   }
   return 0;
 }
+
 
 
 
