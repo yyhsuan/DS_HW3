@@ -617,91 +617,6 @@ class Maze {
     return have_go;
   }
 
-  bool GPT(Stack &s, Stack &back, int &size, Stack &small) {
-    bool have_go = false;
-    int r = 0, c = 0;
-    int shortest = 9999999;
-    int path = 1;
-    Setgrid(r, c, 'V'); // 起點標記
-
-    // 動態建立方向紀錄表
-    int **triedDir = new int*[row];
-    for (int i = 0; i < row; i++) {
-        triedDir[i] = new int[column];
-        for (int j = 0; j < column; j++)
-            triedDir[i][j] = 0;
-    }
-
-    while (!s.empty()) {
-        bool move = false;
-        int &dir = triedDir[r][c]; //  改變 dir 其實就是改 triedDir
-
-        for (int dir = 0; dir < 4 && !move; dir++) {
-            if (dir == 0 && GoRight4(r, c, s, back, shortest, path)) {
-                move = true;
-                dir++;
-                if (c < column - 1 && grid[r * column + c + 1] == 'G') {
-                    have_go = true;
-                    if (s.Length() < shortest) {
-                        shortest = s.Length();
-                        small.copy(s);
-                    }
-                    s.pop(r, c);
-                }
-            } 
-            else if (dir == 1 && GoDown4(r, c, s, back, shortest, path)) {
-                move = true;
-                dir++;
-                if (r < row - 1 && grid[(r + 1) * column + c] == 'G') {
-                    have_go = true;
-                    if (s.Length() < shortest) {
-                        shortest = s.Length();
-                        small.copy(s);
-                    }
-                    s.pop(r, c);
-                }
-            } 
-            else if (dir == 2 && GoLeft4(r, c, s, back, shortest, path)) {
-                move = true;
-                dir++;
-                if (c > 0 && grid[r * column + c - 1] == 'G') {
-                    have_go = true;
-                    if (s.Length() < shortest) {
-                        shortest = s.Length();
-                        small.copy(s);
-                    }
-                    s.pop(r, c);
-                }
-            } 
-            else if (dir == 3 && GoUp4(r, c, s, back, shortest, path)) {
-                move = true;
-                dir++;
-                if (r > 0 && grid[(r - 1) * column + c] == 'G') {
-                    have_go = true;
-                    if (s.Length() < shortest) {
-                        shortest = s.Length();
-                        small.copy(s);
-                    }
-                    s.pop(r, c);
-                }
-            }
-        }
-
-        if (!move && dir >= 4) {
-            triedDir[r][c] = 0;
-            s.pop(r, c);
-        }
-    }
-
-    // 清除記憶體
-    for (int i = 0; i < row; i++)
-        delete[] triedDir[i];
-    delete[] triedDir;
-
-    size = shortest;
-    return have_go;
-}
-
   bool Go(Stack &s, Stack &back) {
     bool yes = false; // 和走過的r c 相同
     int r = 0, c = 0;
@@ -1218,3 +1133,4 @@ int main() {
   }
   return 0;
 }
+
