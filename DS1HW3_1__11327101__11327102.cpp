@@ -1061,14 +1061,14 @@ int main() {
   std::string filename;
   char ch;
   int command = 0;
-  bool has_command1;
+  bool has_command1; // 執行過任務一
   Start();
   while (true) {
     command = 0;
-    bool has_digit = false;
-    bool invalid = false;
+    bool has_digit = false; // 已經有數字
+    bool invalid = false; // 非法輸入
     while ((ch = getchar()) != '\n') {
-      if (ch == ' ' || ch == '\t') {
+      if (ch == ' ' || ch == '\t') { // 跳過空白跟tab
         continue;
       } else if (ch >= '0' && ch <= '4') {
         if (has_digit) {
@@ -1109,6 +1109,7 @@ int main() {
   }
   return 0;
 }
+
 
 
 
