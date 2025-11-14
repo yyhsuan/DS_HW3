@@ -97,15 +97,6 @@ class Stack {
     return count;
   }
 
-  void size_place() {
-    Node *temp = head;
-    while (temp != NULL) {
-      std::cout << "r " << temp->row << " ,c " << temp->column << "\n";
-      temp = temp->next;
-    }
-    return;
-  }
-
   bool getRight() {
     Node *temp = head;
     if ( temp != NULL ) {
@@ -138,34 +129,34 @@ class Stack {
     return false;
   }
 
-  void turnLeft(bool ppdown) {
+  void turnLeft(bool haha) {
     Node *temp = head;
     if ( temp != NULL ) {
-      temp->left = ppdown;
+      temp->left = haha;
     }
     return;
   }
 
-  void turnRight(bool ppdown) {
+  void turnRight(bool haha) {
     Node *temp = head;
     if ( temp != NULL ) {
-      temp->right = ppdown;
+      temp->right = haha;
     }
     return;
   }
 
-  void turnUp(bool ppdown) {
+  void turnUp(bool haha) {
     Node *temp = head;
     if ( temp != NULL ) {
-      temp->up = ppdown;
+      temp->up = haha;
     }
     return;
   }
 
-  void turnDown(bool ppdown) {
+  void turnDown(bool haha) {
     Node *temp = head;
     if ( temp != NULL ) {
-      temp->down = ppdown;
+      temp->down = haha;
     }
     return;
   }
@@ -1110,6 +1101,7 @@ int main() {
   }
   return 0;
 }
+
 
 
 
