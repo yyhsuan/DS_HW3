@@ -496,6 +496,7 @@ void task1() {
   std::ifstream infile(filename); // 讀檔
   Queue q1;
   if (infile) {
+    std::cout << "\n";
     q1.Print_original(filename);
     auto start = std::chrono::high_resolution_clock::now();
     std::ifstream infile2(filename);
@@ -529,6 +530,7 @@ void task2() {
   std::ifstream infile(filename); // 讀檔
   Queue q1;
   if (infile) {
+    std::cout << "\n";
     q1.Print_original(filename);
     std::ifstream infile2(filename);
     q1.load(infile2);
