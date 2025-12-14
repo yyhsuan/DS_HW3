@@ -1,577 +1,931 @@
-#include <iostream>
+// 11327101陳怡瑄 11327102林姿妤
 #include <fstream>
+#include <iostream>
 #include <string>
-#include <chrono>
-#include <cmath>
-#include <iomanip>
-class Queue {
+// 建立/寫入檔案	用 ofstream	ofstream file("a.txt")
+// 讀取檔https://ieet2022survey3.cycu.edu.tw/MySurvey案	用 ifstream	ifstream file("a.txt")       
+class Maze;
+class Stack {
  private:
-  int now_time = 0; // 閒置時間
-  
-  struct Node {
-    int OID;
-    int Arrival; // 下單時間
-    int Duration; // 製作時間
-    int Timeout;  // 到期時刻
-    int Abort; // 取消時刻
-    int Delay; // 延誤時間
-    int Departure; // 完成時刻
-    int CID = 0; // 廚師編號
-    Node* next;
-    Node(int o, int a, int d, int t, int abort, int delay, int departure, int cid) {
-      OID = o;
-      Arrival = a;
-      Duration = d;
-      Timeout = t;
-      Abort = abort;
-      Delay = delay;
-      Departure = departure;
-      CID = cid;
-      next = nullptr;
+  struct Node{
+    int row;
+    int column;
+    Node *next;  // 感覺原本少打*(?
+
+    Node(int r, int c) { // Node的建構子
+      row = r;
+      column = c;
+      next = NULL;
     }
   };
-
-  Node *head, *tail;
-  int len;
-
+  Node *head;
+ 
  public:
-  Queue() {
-    head = nullptr;
-    tail = nullptr;
-    len = 0;
+  Stack() {
+    Node *first = new Node(0,0); // （最左邊上面的那一格）
+    // 上面那行是不是要改成Node *first = new Node(0,0); (?
+    // 對
+    head = first;
   }
-
-  ~Queue() {
-    while (!empty()) {
-      dequene();
-    }
-  }
-
   bool empty() {
     return head == nullptr;
   }
-
-  void enquene(int o, int a, int d, int t, int abort, int delay, int departure, int cid) {
-    Node* n = new Node(o, a, d, t, abort, delay, departure, cid);
-    if (tail) {
-      tail->next = n;
-    }
-    tail = n;
-    if (!head) {
-      head = n;
-    }
-    len++;
+  void push(int r, int c) { 
+    Node *newNode = new Node(r, c); 
+    newNode->next = head; 
+    head = newNode; 
   }
-
-  void dequene() {
-    if (!head) {
-      return;
-    }
-    Node* t = head;
-    head = head->next;
-    if (!head) {
-      tail = nullptr;
-    }
-    delete t;
-    len--;
-  }
-
-  int size() {
-    return len;
-  }
-  void load(std::ifstream &infile) {
-    std::string line;
-
-    // 先讀掉標題列
-    std::getline(infile, line);
-
-    int o, a, d, t;
-
-    while (true) {
-        if (!std::getline(infile, line)) break;
-        if (line.empty()) continue;
-
-        int num = 0;
-        int order = 0;
-
-        o = a = d = t = 0;
-
-        for (size_t i = 0; i <= line.size(); i++) {
-            char ch;
-
-            // 最後一欄用 '\t' 作為結束符號（因為 line[i] 已經沒有字）
-            if (i < line.size()) {
-                ch = line[i];
-            } else {
-                ch = '\t';
-            }
-
-            // 數字 => 持續累積
-            if (ch >= '0' && ch <= '9') {
-                num = num * 10 + (ch - '0');
-            } 
-            // 遇到分隔符（tab 或行尾） => 欄位結束
-            else {
-                if (order == 0) {
-                    o = num;
-                } else if (order == 1) {
-                    a = num;
-                } else if (order == 2) {
-                    d = num;
-                } else if (order == 3) {
-                    t = num;
-                }
-
-                if (order == 3) break;  // 四欄都讀好了
-
-                num = 0;
-                order++;
-            }
-        }
-
-        // 讀完四欄，丟進 queue
-        enquene(o, a, d, t, 0, 0, 0, 0);
-    }
-  }
-
-  
-
-  // 安全版 turnindex (0-based)，index 非法回傳 nullptr
-  Node* turnindex(int index) {
-    Node* temp = head;
-    int i = 0;
-    while (i < index) {
-      temp = temp->next;
-      i++;
-    }
-    return temp;
-  }
-
-  void sell_sore2() {
-    int size = len;
-    if (size <= 1) {
-      return;
-    }
-    int gap = size / 2;
-    while (gap != 0) {
-      for (int i = 0; i < size; i++) { // 跑下一組
-        for (int j = i + gap; j < size; j = j + gap) { // 跑下一個這個組的成員
-          Node* temp1 = turnindex(j);
-          int tempOID      = temp1->OID;
-          int tempArrival  = temp1->Arrival;
-          int tempDuration = temp1->Duration;
-          int tempTimeout  = temp1->Timeout;
-          int k = j - gap;
-          while (k >= 0) {
-            Node* k_temp = turnindex(k);
-            bool needmove = false;
-            if (k_temp->Arrival > tempArrival) {
-              needmove = true;
-            } else if (k_temp->Arrival == tempArrival && k_temp->OID > tempOID) {
-              needmove = true;
-            }
-            if (!needmove) {
-              break;
-            }
-            Node* target = turnindex(k + gap);
-            target->OID      = k_temp->OID;
-            target->Arrival  = k_temp->Arrival;
-            target->Duration = k_temp->Duration;
-            target->Timeout  = k_temp->Timeout;
-            k = k - gap;
-          }
-          Node* insert = turnindex(k + gap);
-          if (insert != nullptr) {
-            insert->OID      = tempOID;
-            insert->Arrival  = tempArrival;
-            insert->Duration = tempDuration;
-            insert->Timeout  = tempTimeout;
-          }
-        }
-      }
-      gap = gap / 2;
-    }
-  }
-
-  void write_file(std::string file_number) {
-    std::string filename = "sorted" + file_number + ".txt";
-    std::ofstream outfile(filename);
+  void pop(int &r, int &c) {
+    r = head->row;
+    c = head->column;
     Node *temp = head;
-    outfile << "OID\tArrival\tDuration\tTimeOut\n";
+    head = head->next;
+    delete temp;
+  }
+
+  bool IsSame(int r, int c) {
+    Node *temp = head;
     while ( temp != NULL ) {
-        outfile << temp->OID << "\t"
-                << temp->Arrival << "\t"
-                << temp->Duration << "\t"
-                << temp->Timeout << "\n";
-        temp = temp->next;
+      if ( temp->row == r && temp->column == c ) {
+        return true;
+      }
+      temp = temp->next;
+    }
+    return false;
+  }
+
+  void copy(Stack &s) {
+    Node *temp = s.head;
+    while (temp != NULL ) {
+      push(temp->row, temp->column);
+      temp = temp->next;
     }
     return;
   }
 
-  void printo() {
+  void turnR(Maze &a);  // 只宣告 // 改R
+  void turnG(Maze &a); // 只宣告 // 改G
+  int Length() {
+    int count = 0;
     Node *temp = head;
-    std::cout << "OID CID Delay Departure\n";
-    while ( temp != NULL ) {
-        std::cout << temp->OID << "\t"
-                << temp->Arrival << "\t"
-                << temp->Duration << "\t"
-                << temp->Timeout << "\n";
-        temp = temp->next;
-    }
-  }
-
-  void printc() {
-    Node *temp = head;
-    std::cout << "OID CID Delay Abort \n";
-    while ( temp != NULL ) {
-        std::cout << temp->OID << "\t"
-                << temp->CID << "\t"
-                << temp->Delay << "\t"
-                << temp->Abort << "\n";
-        temp = temp->next;
-    }
-  }
-
-  void printd() {
-    Node *temp = head;
-    std::cout << "\tOID\tCID\tDelay\tDeparture\n";
-    while ( temp != NULL ) {
-        std::cout << temp->OID << "\t"
-                << temp->CID << "\t"
-                << temp->Delay << "\t"
-                << temp->Departure << "\n";
-        temp = temp->next;
-    }
-  }
-
-  void write_file2(std::string file_number, Queue &timeout, int total, int size) {
-    std::string filename = "One" + file_number + ".txt";
-    std::ofstream outfile(filename);
-
-    Node *abort_temp = head;
-    Node *timeout_temp = timeout.head;
-
-    int i = 1;
-
-    outfile << "\t[Abort List]\n";
-    outfile << "\tOID\tCID\tDelay\tAbort\n";
-
-    while (abort_temp != NULL) {
-        outfile << "[" << i << "]\t"
-                << abort_temp->OID << "\t"
-                << abort_temp->CID << "\t"
-                << abort_temp->Delay << "\t"
-                << abort_temp->Abort << "\n";
-        abort_temp = abort_temp->next;
-        i++;
-    }
-
-    i = 1;
-    outfile << "\n\t[Timeout List]\n";
-    outfile << "\tOID\tCID\tDelay\tDeparture\n";
-
-    while (timeout_temp != NULL) {
-        outfile << "[" << i << "]\t"
-                << timeout_temp->OID << "\t"
-                << timeout_temp->CID << "\t"
-                << timeout_temp->Delay << "\t"
-                << timeout_temp->Departure << "\n";
-        timeout_temp = timeout_temp->next;
-        i++;
-    }
-
-    outfile << "\n[Total Delay]\n";
-    outfile << total << " min.\n";
-    outfile << "[Failure Percentage]\n";
-    double fail = len + timeout.len;
-    fail = (double)fail / (double)size * 100.00;
-    fail = round(fail * 100) / 100;
-    outfile << std::fixed << std::setprecision(2) << fail;
-}
-
-
-  void Print_original(std::string filename) {
-    std::ifstream infile(filename); // 讀檔
-    char ch;
-    while ( infile.get(ch) ) {
-      std::cout << ch;
-    }
-    std::cout << std::endl;
-    infile.close();
-  }
-
-  int onecook(Queue &cook, Queue &cancel, Queue &Timeout) {
-    bool move = false;
-    Node *temp = head;  // 輸入訂單（sorted401.txt）
-    int total_delay = 0;
-
     while (temp != NULL) {
-        move = false;
-        // 1. Idle → 跳到 arrival
-        if (cook.size() == 0 && cook.now_time < temp->Arrival) {
-            cook.now_time = temp->Arrival;
-        }
-
-        // 2. cook queue 滿（size==3）→ 取消
-        if (cook.size() == 3) {
-            if ( temp->Duration > 0 && temp->Arrival + temp->Duration <= temp->Timeout ) {
-              int Abort = temp->Arrival;
-              int Delay = 0;
-              total_delay = total_delay + Delay;
-              cancel.enquene(temp->OID, temp->Arrival, temp->Duration,
-                           temp->Timeout, Abort, Delay, 0, 0);
-
-              temp = temp->next;
-              move = true;
-            }
-
-            else {
-              temp = temp->next;
-              len--;
-              move = true;
-            }
-        }
-
-        // 3. 接收訂單（一定合法）
-        if ( !move ) {
-          if ( temp->Duration > 0 && temp->Arrival + temp->Duration <= temp->Timeout ) {
-            cook.enquene(temp->OID, temp->Arrival, temp->Duration, temp->Timeout, 0, 0, 0, 1);
-            temp = temp->next;
-            move = true;
-            if ( temp->Duration <= 0 || temp->Arrival + temp->Duration > temp->Timeout ) {
-              temp = temp->next;
-              len--;
-              move = true;
-            }
-          }
-
-          else {
-            temp = temp->next;
-            len--;
-            move = true;
-          }
-        }
-        // -------------------------------------------------
-        // 4. 廚師若空閒 → 做工作
-        // -------------------------------------------------
-        while (cook.size() > 0 && temp != NULL && cook.now_time <= temp->Arrival) {
-
-            Node *job = cook.head;
-
-            // (A) job 取出時逾時
-            if (job->Timeout < cook.now_time) {
-                int Abort = cook.now_time;
-                int Delay = Abort - job->Arrival;
-                total_delay = total_delay + Delay;
-
-                cancel.enquene(job->OID, job->Arrival, job->Duration,
-                               job->Timeout, Abort, Delay, 0, 1);
-
-                cook.dequene();
-                continue;
-            }
-
-            // (B) 開始做菜
-            int startTime = cook.now_time;
-
-            if (cook.now_time < job->Arrival) {
-              cook.now_time = job->Arrival;
-            }
-
-            int duration_time = job->Duration;
-
-            // 在做菜期間：可能有新的訂單到達
-            for (int i = 0; i < duration_time; i++) {
-
-                // 新訂單到達
-                while (temp != NULL && temp->Arrival == cook.now_time) {
-                    if ( temp->Duration <= 0 || temp->Arrival + temp->Duration > temp->Timeout ) {
-                      temp = temp->next;
-                      len--;
-                    }
-                    // cook queue 滿 → 新訂單取消
-                    if (cook.size() == 4) {
-                        cancel.enquene(temp->OID, temp->Arrival, temp->Duration,
-                                       temp->Timeout, temp->Arrival, 0, 0, 0);
-                        temp = temp->next;
-                        continue;
-                    }
-
-                    // 新訂單加入 cook queue
-                    cook.enquene(temp->OID, temp->Arrival, temp->Duration, temp->Timeout, 0, 0, 0, 1);
-                    temp = temp->next;
-                }
-
-                // 時間流逝 1 單位
-                cook.now_time++;
-            }
-
-            // (C) 做完後判斷是否 timeout
-            if (job->Timeout < cook.now_time) {
-                int Departure = cook.now_time;
-                int Delay = startTime - job->Arrival;
-                total_delay = total_delay + Delay;
-
-                Timeout.enquene(job->OID, job->Arrival, job->Duration, job->Timeout, 0, Delay, Departure, 1);
-            }
-
-            cook.dequene();
-        }
-
-        // 若這筆 temp 在這圈沒被動過 → 移到下一筆
-        if (!move && temp != NULL) {
-          temp = temp->next;
-        }
+      count++;
+      temp = temp->next;
     }
-
-    // -------------------------------------------------
-    // 5. 所有輸入處理完 → cook queue 剩下的做完
-    // -------------------------------------------------
-    while (cook.size() > 0) {
-
-        Node *job = cook.head;
-
-        if ( job->Duration <= 0 || job->Arrival + job->Duration > job->Timeout ) {
-          cook.dequene();
-          len--;
-          continue;
-        }
-        // timeout → cancel
-        if (job->Timeout < cook.now_time) {
-            int Abort = cook.now_time;
-            int Delay = Abort - job->Arrival;
-            total_delay = total_delay + Delay;
-            cancel.enquene(job->OID, job->Arrival, job->Duration,
-                           job->Timeout, Abort, Delay, 0, 1);
-
-            cook.dequene();
-            continue;
-        }
-
-        // 做最後的訂單
-        int startTime = cook.now_time;
-        if (cook.now_time < job->Arrival) {
-            cook.now_time = job->Arrival;
-        }
-
-        cook.now_time = cook.now_time + job->Duration;
-
-        if (job->Timeout < cook.now_time) {
-          int Departure = cook.now_time;
-          int Delay = startTime - job->Arrival;
-          total_delay = total_delay + Delay;
-
-          Timeout.enquene(job->OID, job->Arrival, job->Duration, job->Timeout, 0, Delay, Departure, 1);
-        }
-
-        cook.dequene();
-    }
-
-    return total_delay;
+    return count;
   }
 
+  void size_place() {
+    Node *temp = head;
+    while (temp != NULL) {
+      std::cout << "r " << temp->row << " ,c " << temp->column << "\n";
+      temp = temp->next;
+    }
+    return;
+  }
 
+  int getR() {
+    Node *temp = head;
+    if ( temp != NULL ) {
+      return temp->row;
+    }
+    return 0;
+  }
 
+  int getC() {
+    Node *temp = head;
+    if ( temp != NULL ) {
+      return temp->row;
+    }
+    return 0;
+  }
 
-}; // end Queue
-
-struct AbortEntry {
-  int OID; // 訂單編號
-  int Abort; // 取消時刻
-  int Delay; // 延誤時間
 };
 
-struct TimeoutEntry {
-  int OID; // 訂單編號
-  int Departure; // 完成時刻
-  int Delay; // 延誤時間
+class Maze {
+ private:
+  int row;
+  int column;
+  char *grid;   // 這不知道對不對 反正要有上面那兩個?
+
+ public:
+  void initial(int r, int c) {    // 看要不要改成建構子
+    row = r;
+    column = c;
+    grid = new char[row * column];  
+  }
+
+  void load(std::ifstream &infile) { // 載入迷宮資料
+    char ch;
+    int r = 0;
+    int c = 0;
+    while (infile.get(ch)) {   // 每次讀一個字元到 c
+      if ( ch != '\n' ) {
+        grid[r * column + c] = ch;
+        c++;
+      }
+      
+      else {
+        r++;
+        c = 0;
+      }       
+    }
+    return;
+  }
+
+  // print我有修一下 不對再改回去
+  void print() { // 印出迷宮資料
+    for (int r = 0; r < row; r++) {
+      for (int c = 0; c < column; c++) {
+        std::cout << grid[r * column + c];
+      }
+      std::cout << "\n";
+    }
+  }
+
+  char Getgrid(int r, int c) { // 取得這格的東西
+    return grid[r * column + c];
+  }
+
+  void Setgrid(int r, int c, char letter) { // 改這格的字母(走過改V,路徑改R)
+    grid[r * column + c] = letter; 
+  }
+
+  bool GoLeft(int &r, int &c, Stack &s, Stack &back) { // r c 放目前的位置
+    //r = s.getR();
+    //c = s.getC();
+    int count = 0;
+    while (c - 1 >= 0 && grid[r * column + (c - 1)] != 'O') {
+      if (grid[r * column + c - 1 ] == 'G') { // 到終點
+        count++;
+        return true;
+      }
+      count++;
+      c--;      
+      s.push(r, c);
+      back.push(r, c);
+      Setgrid(r, c, 'V');
+    }
+    if ( count > 0 ) {
+      return true;
+    }
+
+    else {
+      return false;
+    } 
+  }
+
+  bool GoRight(int &r, int &c, Stack &s, Stack &back) { // r c 放目前的位置 ，向左到撞牆 direction走的方向
+    //r = s.getR();
+    //c = s.getC();
+    int count = 0;
+    while (c + 1 < column && grid[r * column + (c + 1)] != 'O') {
+      if (grid[r * column + c + 1] == 'G') { // 到終點
+        count++;
+        return true;
+      }
+      count++;                 
+      c++;
+      s.push(r, c);
+      back.push(r, c);
+      Setgrid(r, c, 'V');
+    }
+    if ( count > 0 ) {
+      return true;
+    }
+
+    else {
+      return false;
+    }
+  }  
+  bool GoUp(int &r, int &c, Stack &s, Stack &back) {
+    //r = s.getR();
+    //c = s.getC();
+    int count = 0;
+    while (r - 1 >= 0 && grid[(r - 1) * column + c] != 'O') {
+      if (grid[(r - 1) * column + c] == 'G') {
+        count++;
+        return true;
+      }
+      count++;
+      r--;
+      s.push(r, c);
+      back.push(r, c);
+      Setgrid(r, c, 'V');
+    }
+    if ( count > 0 ) {
+      return true;
+    }
+
+    else {
+      return false;
+    }
+  }  
+  bool GoDown(int &r, int &c, Stack &s, Stack &back) {
+    //r = s.getR();
+    //c = s.getC();
+    int count = 0;
+    while (r + 1 < row && grid[(r + 1) * column + c] != 'O') {
+      if (grid[(r + 1) * column + c] == 'G') {
+        count++;
+        return true;
+      }
+      count++;
+      r++;
+      s.push(r, c);
+      back.push(r, c);
+      Setgrid(r, c, 'V');
+    }
+    if ( count > 0 ) {
+      return true;
+    }
+
+    else {
+      return false;
+    }
+  }
+
+  
+
+  bool GoLeft4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) { // r c 放目前的位置
+    //r = s.getR();
+    //c = s.getC();
+    int count = 0;
+    while (c - 1 >= 0 && grid[r * column + (c - 1)] != 'O') {
+      bool yes = s.IsSame(r, c - 1);
+      if ( !yes ) {
+        if ( path < size ) {
+          if (grid[r * column + c - 1 ] == 'G') { // 到終點
+            count++;
+            return true;
+          }
+          count++;
+          c--;      
+          s.push(r, c);
+          back.push(r, c);
+          Setgrid(r, c, 'V');
+          path++;
+        }
+
+        else {
+          if (grid[r * column + c - 1 ] != 'G') {
+  
+            path--;
+            s.pop(r, c);
+          }
+          break;
+        }
+      }
+
+      else {
+        path--;
+        s.pop(r, c);
+        return false;
+      }
+    }
+    if ( count > 0 ) {
+      return true;
+    }
+
+    else {
+      return false;
+    }
+  }
+
+  bool GoRight4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) { // r c 放目前的位置 ，向右到撞牆
+    //r = s.getR();
+    //c = s.getC();
+    int count = 0;
+    while (c + 1 < column && grid[r * column + (c + 1)] != 'O') {
+      bool yes = s.IsSame(r, c + 1);
+      if ( !yes ) {
+        if ( path < size ) {
+          if (grid[r * column + c + 1] == 'G') { // 到終點
+            count++;
+            return true;
+          }
+          count++;                 
+          c++;
+          s.push(r, c);
+          back.push(r, c);
+          Setgrid(r, c, 'V');
+          path++;
+        }
+
+        else {
+          if (grid[r * column + c + 1] != 'G') {
+            path--;
+            s.pop(r, c);
+          }
+          break;
+        }
+      }
+
+      else {
+        path--;
+        s.pop(r, c);
+        return false;
+      }
+    }
+    if ( count > 0 ) {
+      return true;
+    }
+
+    else {
+      return false;
+    }
+  }  
+  bool GoUp4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) {
+    //r = s.getR();
+   // c = s.getC();
+    int count = 0;
+    while (r - 1 >= 0 && grid[(r - 1) * column + c] != 'O') {
+      bool yes = s.IsSame(r - 1, c);
+      if ( !yes ) {
+        if ( path < size ) {
+          if (grid[(r - 1) * column + c] == 'G') {
+            count++;
+            return true;
+          }
+          count++;
+          r--;
+          s.push(r, c);
+          back.push(r, c);
+          Setgrid(r, c, 'V');
+          path++;
+        }
+
+        else {
+          if (grid[(r - 1) * column + c] != 'G') {
+            path--;
+            s.pop(r, c);
+          }
+          break;
+        }
+      }
+
+      else {
+        path--;
+        s.pop(r, c);
+        return false;
+      }
+    }
+    if ( count > 0 ) {
+      return true;
+    }
+
+    else {
+      return false;
+    }
+  }  
+  bool GoDown4(int &r, int &c, Stack &s, Stack &back, int &size, int &path) {
+    int count = 0;
+    //r = s.getR();
+    //c = s.getC();
+    while (r + 1 < row && grid[(r + 1) * column + c] != 'O') {
+      bool yes = s.IsSame(r + 1, c);
+      if ( !yes ) {
+        if ( path < size ) {
+          if (grid[(r + 1) * column + c] == 'G') {
+            count++;
+            return true;
+          }
+          count++;
+          r++;
+          s.push(r, c);
+          back.push(r, c);
+          Setgrid(r, c, 'V');
+          path++;
+        }
+
+        else {
+          if (grid[(r + 1) * column + c] != 'G') {
+            path--;
+            s.pop(r, c);
+          }
+          break;
+        }
+      }
+
+      else {
+        path--;
+        s.pop(r, c);
+        return false;
+      }
+    }
+
+    if ( count > 0 ) {
+      return true;
+    }
+
+    else {
+      return false;
+    }
+  }
+
+  bool Go4(Stack &s, Stack &back, int &size, Stack &small) {
+    bool yes = false; // 和走過的r c 相同
+    int r = 0, c = 0;
+    bool have_go = false; // 找到g
+    int is_small = size;
+    int path = 1; // 每條的數量
+    Setgrid(r, c, 'V');
+    while (!s.empty()) {
+      std::cout << "path  " << path << std::endl;
+      std::cout << "r  " << r << std::endl;
+      std::cout << "c  " << c << std::endl;
+      bool move = false;
+      if (GoRight4(r, c, s, back, is_small, path)) {
+        move = true;
+        if ( c < column - 1 ) {
+          if ( grid[r * column + c + 1] == 'G' ) {
+            have_go = true;
+            if ( path <= is_small ) {
+              is_small = path;
+              small.copy(s);
+            }
+            path--;
+            s.pop(r, c);
+          }
+        }
+      }
+      if (GoDown4(r, c, s, back, is_small, path)) { 
+        move = true;
+        if ( r < row - 1) {
+          if ( grid[(r + 1) * column + c] == 'G' ) {
+            have_go = true;
+            if ( path < is_small ) {
+              is_small = path;
+              small.copy(s);
+            }
+            path--;
+            s.pop(r, c);
+          }
+        }
+      }
+      if (GoLeft4(r, c, s, back, is_small, path)) { 
+        move = true;
+        if ( c > 0 ) {
+          if ( grid[r * column + c - 1] == 'G' ) {
+            have_go = true;
+            if ( path <= is_small ) {
+              is_small = path;
+              small.copy(s);
+            }
+            path--;
+            s.pop(r, c);
+          }
+        }
+      }
+      if (GoUp4(r, c, s, back, is_small, path)) { 
+        move = true;
+        if ( r > 0 ) {
+          if ( grid[(r - 1) * column + c] == 'G' ) {
+            have_go = true;
+            if ( path < is_small ) {
+              is_small = path;
+              small.copy(s);
+            }
+            path--;
+            s.pop(r, c);
+          }
+        }
+      }
+      if ( r == row - 1 && c == column - 1 ) {// 回上一格
+        break;
+      }
+
+      if (!move) {// 回上一格
+        path--;
+        s.pop(r, c);
+      }
+    }
+    size = is_small;
+    return have_go;
+  }
+  bool Go(Stack &s, Stack &back) {
+    bool yes = false; // 和走過的r c 相同
+    int r = 0, c = 0;
+    bool have_go = false; // 找到g
+    Setgrid(r, c, 'V');
+    while (!s.empty()) {
+      bool move = false;
+      yes = back.IsSame(r, c + 1);
+      if (!yes) {
+        if (GoRight(r, c, s, back)) {
+          move = true;
+          if (c < column - 1) {
+            if (grid[r * column + c + 1] == 'G') {
+              have_go = true;
+              break;
+            }
+          }
+        }
+      }
+      yes = back.IsSame(r + 1, c);
+      if (!yes) {
+        if (GoDown(r, c, s, back)) {
+          move = true;
+          if (r < row - 1) {
+            if (grid[(r + 1) * column + c] == 'G') {
+              have_go = true;
+              break;
+            }
+          }
+        }
+      }
+      yes = back.IsSame(r, c - 1);
+      if (!yes) {
+        if (GoLeft(r, c, s, back)) {
+          move = true;
+          if (c > 0) {
+            if (grid[r * column + c - 1] == 'G') {
+              have_go = true;
+              break;
+            }
+          }
+        }
+      }
+      yes = back.IsSame(r - 1, c);
+      if (!yes) {
+        if (GoUp(r, c, s, back)) {
+          move = true;
+          if (r > 0) {
+            if (grid[(r - 1) * column + c] == 'G') {
+              have_go = true;
+              break;
+            }
+          }
+        }
+      }
+      if (!move) { // 回上一格
+        s.pop(r, c);
+      }
+    }
+    return have_go;
+  }
+
+  bool Findgoals(Stack &s, int number, Stack &back, Stack &saveG) {
+    bool yes = false;
+    int r = 0, c = 0;
+    bool have_go = false; 
+    int found = 0;
+    s.push(r, c);
+    Setgrid(r, c, 'V');
+    while (!s.empty()) {
+      bool move = false;
+      yes = back.IsSame(r, c + 1);
+      if (!yes) {
+        if (GoRight(r, c, s, back)) {
+          move = true;
+          if (c < column - 1) {
+            if (grid[r * column + c + 1] == 'G') {
+              found++;
+              Setgrid(r, c + 1, 'E');
+              saveG.push(r , c + 1);
+              if (found == number) {
+                have_go = true;
+                break;
+              }
+            }
+          }
+        }
+      }
+      yes = back.IsSame(r + 1, c);
+      if (!yes) {
+        if (GoDown(r, c, s, back)) {
+          move = true;
+          if (r < row - 1) {
+            if (grid[(r + 1) * column + c] == 'G') {
+              found++;
+              Setgrid(r + 1, c, 'E');
+              saveG.push(r , c + 1);
+              if (found == number) {
+                have_go = true;
+                break;
+              }
+            }
+          }
+        }
+      }
+      yes = back.IsSame(r, c - 1);
+      if (!yes) {
+        if (GoLeft(r, c, s, back)) {
+          move = true;
+          if (c > 0) {
+            if (grid[r * column + c - 1] == 'G') {
+              found++;
+              Setgrid(r, c - 1, 'E');
+              saveG.push(r , c + 1);
+              if (found == number) {
+                have_go = true;
+                break;
+              }
+            }
+          }
+        }
+      }
+      yes = back.IsSame(r - 1, c);
+      if (!yes) {
+        if (GoUp(r, c, s, back)) {
+          move = true;
+          if (r > 0) {
+            if (grid[(r - 1) * column + c] == 'G') {
+              found++;
+              Setgrid(r - 1, c, 'E');
+              saveG.push(r , c + 1);
+              if (found == number) {
+                have_go = true;
+                break;
+              }
+            }
+          }
+        }
+      }
+      if (!move) { // 回上一格
+        s.pop(r, c);
+      }
+    }
+    return have_go;
+  }
+
+  bool Findgoals3(Stack &s, int &number, Stack &back, Stack &saveG) { // saveG 存G點位置
+    bool yes = false;
+    int r = 0, c = 0;
+    bool have_go = false; 
+    Setgrid(r, c, 'V');
+    while (!s.empty()) {
+      bool move = false;
+      yes = back.IsSame(r, c + 1);
+      if (!yes) {
+        if (GoRight(r, c, s, back)) {
+          move = true;
+          if (c < column - 1) {
+            if (grid[r * column + c + 1] == 'G') {
+              number++;
+              Setgrid(r, c + 1, 'E');
+              saveG.push(r , c + 1);
+              have_go = true;
+            }
+          }
+        }
+      }
+      yes = back.IsSame(r + 1, c);
+      if (!yes) {
+        if (GoDown(r, c, s, back)) {
+          move = true;
+          if (r < row - 1) {
+            if (grid[(r + 1) * column + c] == 'G') {
+              number++;
+              Setgrid(r + 1, c, 'E');
+              saveG.push(r , c + 1);
+              have_go = true;
+            }
+          }
+        }
+      }
+      yes = back.IsSame(r, c - 1);
+      if (!yes) {
+        if (GoLeft(r, c, s, back)) {
+          move = true;
+          if (c > 0) {
+            if (grid[r * column + c - 1] == 'G') {
+              number++;
+              Setgrid(r, c - 1, 'E');
+              saveG.push(r , c + 1);
+              have_go = true;
+            }
+          }
+        }
+      }
+      yes = back.IsSame(r - 1, c);
+      if (!yes) {
+        if (GoUp(r, c, s, back)) {
+          move = true;
+          if (r > 0) {
+            if (grid[(r - 1) * column + c] == 'G') {
+              number++;
+              Setgrid(r - 1, c, 'E');
+              saveG.push(r , c + 1);
+              have_go = true;
+            }
+          }
+        }
+      }
+      if (!move) { // 回上一格
+        s.pop(r, c);
+      }
+    }
+    return have_go;
+  }
 };
 
-void task1() {
-  std::string file_number;
-  std::cout << "Input a file number (e.g., 401, 402, 403, ...): ";
-  std::cin >> file_number;
-  getchar();
-  std::string filename = "input" + file_number + ".txt"; // 轉字串
-  std::ifstream infile(filename); // 讀檔
-  Queue q1;
-  if (infile) {
-    std::cout << "\n";
-    q1.Print_original(filename);
-    auto start = std::chrono::high_resolution_clock::now();
-    std::ifstream infile2(filename);
-    q1.load(infile2);
-    auto end = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    std::cout << "Reading data: " << duration.count() << " us." << std::endl;
-    start = std::chrono::high_resolution_clock::now();
-    q1.sell_sore2();
-    end = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    std::cout << "Sorting data: " << duration.count() << " us." << std::endl;
-    start = std::chrono::high_resolution_clock::now();
-    q1.write_file(file_number);
-    end = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    std::cout << "Writing data: " << duration.count() << " us." << std::endl;
-    
-  } else {
-    std::cout << "input" << file_number << ".txt does not exist!";
+void Stack::turnR(Maze &a) {  // 改R 因為編譯器的問題，所以放在這
+  Node *temp = head;
+  while (temp != NULL) {
+    a.Setgrid(temp->row, temp->column, 'R');
+    temp = temp->next;
   }
   return;
 }
 
-void task2() {
-  std::string file_number;
-  std::cout << "Input a file number (e.g., 401, 402, 403, ...): ";
-  std::cin >> file_number;
-  getchar();
-  std::string filename = "sorted" + file_number + ".txt"; // 轉字串
-  std::ifstream infile(filename); // 讀檔
-  Queue q1;
-  if (infile) {
-    std::cout << "\n";
-    q1.Print_original(filename);
-    std::ifstream infile2(filename);
-    q1.load(infile2);
-    Queue cook;
-    Queue cancel;
-    Queue delay;
-    int total_delay = q1.onecook(cook, cancel, delay);
-    int size = q1.size();
-    cancel.write_file2(file_number, delay, total_delay, size);
-    
-  } else {
-    std::cout << "input" << file_number << ".txt does not exist!";
+void Stack::turnG(Maze &a) {  // 改G 因為編譯器的問題，所以放在這
+  Node *temp = head;
+  while (temp->next != NULL) { // (0,0)不是G
+    a.Setgrid(temp->row, temp->column, 'G');
+    temp = temp->next;
   }
   return;
 }
 
 void Start() {
   std::cout << "*** (^_^) Data Structure (^o^) ***" << std::endl;
-  std::cout << "** Simulate FIFO Queues by SQF ***" << std::endl;
-std::cout << "* 0. Quit                        *" << std::endl;
-std::cout << "* 1. Sort a file                 *" << std::endl;
-std::cout << "* 2. Simulate one FIFO queue     *" << std::endl;
-std::cout << "* 3. Simulate two queues by SQF  *" << std::endl;
-std::cout << "* 4. Simulate some queues by SQF *" << std::endl;
-std::cout << "**********************************" << std::endl;
+  std::cout << "*** Find the Goal(s) in a Maze ***" << std::endl;
+  std::cout << "* 0. Quit                        *" << std::endl;
+  std::cout << "* 1. Find one goal               *" << std::endl;
+  std::cout << "* 2. Find goal(s) as requested   *" << std::endl;
+  std::cout << "* 3. How many goals?             *" << std::endl;
+  std::cout << "* 4. Shortest path to one goal   *" << std::endl;
+  std::cout << "**********************************" << std::endl;
   std::cout << "Input a command(0, 1, 2, 3, 4): ";
 }
 
+void task1(std::string &filename) {
+  int file_number;
+  Maze a;
+  std::cout << "Input a file number: ";
+  std::cin >> file_number;
+  filename = "input" + std::to_string(file_number) + ".txt"; // 轉字串
+  std::ifstream infile(filename); // 測試讀檔 github不能run
+  char ch = getchar();
+  if ( infile ) {
+    int x;
+    int y;
+    infile >> x >> y; // 讀int x,y
+    infile.get();
+    a.initial(y, x);
+    a.load(infile);
+    Stack s;
+    Stack back;
+    int r = 0;
+    int c = 0;
+    bool yes = a.Go(s, back);
+    a.print();
+    if ( yes ) {
+      std::cout << "\n";
+      s.turnR(a);
+      a.print();
+    }
+  }
+
+  else {
+    std::cout << "input" << file_number << ".txt does not exist!";
+  }
+  std::cout << std::endl;
+  infile.close(); // 關閉檔案
+  return;
+}
+
+void task2(std::string filename) { 
+  int number;
+  Maze a;
+  std::ifstream infile(filename);
+  if ( infile ) {
+    while (true) {
+      std::cout << "Number of G (goals): ";
+      int num = 0;
+      bool has_digit = false;
+      bool invalid = false;
+      char ch;
+      while ((ch = getchar()) != '\n') {
+        if (ch == ' ' || ch == '\t') {
+          continue;  // 忽略空白
+        } else if (ch >= '0' && ch <= '9') {
+          has_digit = true;
+          num = num * 10 + (ch - '0');
+        } else {
+          invalid = true;  // 有非數字
+        }
+      }
+
+      if (!has_digit || invalid) {
+        // 輸入不是純數字
+        continue;
+      }
+      if (num < 1 || num > 100) {
+        std::cout << "### The number must be in [1,100] ###" << std::endl;
+        continue;
+      }
+      number = num;
+      break;
+    }
+    std::ifstream infile(filename);
+    int x;
+    int y;
+    infile >> x >> y; // 讀int x,y
+    infile.get();
+    a.initial(y, x);
+    a.load(infile);
+    Stack s;
+    Stack back;
+    Stack saveG;
+    int r = 0;
+    int c = 0;
+    bool yes = a.Findgoals(s,number, back, saveG);
+    saveG.turnG(a);
+    a.print();
+    if ( yes ) {
+      std::cout << "\n";
+      s.turnR(a);
+      a.print();
+    }
+  }
+  else {
+    std::cout << "### Execute command 1 to load a maze! ###";
+  }
+  std::cout << std::endl;
+  return;
+}
+
+void task3(std::string filename) { 
+  int number = 0;
+  Maze a;
+  std::ifstream infile(filename);
+  if ( infile ) {
+    std::ifstream infile(filename);
+    int x;
+    int y;
+    infile >> x >> y; // 讀int x,y
+    infile.get();
+    a.initial(y, x);
+    a.load(infile);
+    Stack s;
+    Stack back;
+    Stack saveG;
+    int r = 0;
+    int c = 0;
+    bool yes = a.Findgoals3(s,number, back, saveG);
+    saveG.turnG(a);
+    a.print();
+    std::cout << "\n";
+    std::cout << "The maze has " << number <<  " goal(s) in total.";
+  }
+  else {
+    std::cout << "### Execute command 1 to load a maze! ###";
+  }
+  std::cout << std::endl;
+  return;
+}
+
+void task4() {
+  std::string filename;
+  int file_number;
+  Maze a;
+  std::cout << "Input a file number: ";
+  std::cin >> file_number;
+  filename = "input" + std::to_string(file_number) + ".txt"; // 轉字串
+  char ch = getchar();
+  std::ifstream infile(filename); // 測試讀檔 github不能run
+  if ( infile ) {
+    int x,y;
+    Stack small;
+    std::ifstream infile(filename);
+    infile >> x >> y; // 讀int x,y
+    infile.get();
+    Maze b;
+    b.initial(y, x);
+    b.load(infile);
+    Stack s_2;
+    Stack back_2;
+    int size;
+    bool yes_2 = b.Go4(s_2, back_2, size, small);
+    b.print();
+    if ( yes_2 ) {
+      std::cout << "\n";
+      small.turnR(b);
+      b.print();
+    }
+  }
+
+  else {
+    std::cout << "input" << file_number << ".txt does not exist!";
+  }
+  std::cout << std::endl;
+  infile.close(); // 關閉檔案
+  return;
+}
 int main() {
   std::string filename;
   char ch;
   int command = 0;
-  bool has_command2 = false;
-  Start(); // 印選單
+  bool has_command1;
+  Start();
   while (true) {
     command = 0;
-    bool has_digit = false; // 已經有數字
-    bool invalid = false; // 非法輸入
-    bool aaaaa = false;
+    bool has_digit = false;
+    bool invalid = false;
     while ((ch = getchar()) != '\n') {
-      if (ch == ' ' || ch == '\t') { // 跳過空白跟tab
+      if (ch == ' ' || ch == '\t') {
         continue;
       } else if (ch >= '0' && ch <= '4') {
         if (has_digit) {
@@ -580,18 +934,12 @@ int main() {
           command = ch - '0';
           has_digit = true;
         }
-      } else if (ch >= '5' && ch <= '9') {
-        has_digit = true;
       } else { // 非法字元
-        aaaaa = true;
+        invalid = true;
       }
     }
-
-    if (aaaaa) {
-      return 0;
-    }
-
-    if (invalid) {
+    // 處理非法輸入
+    if (invalid || (!has_digit)) {
       std::cout << "Command does not exist!" << std::endl << std::endl;
       Start();
       continue;
@@ -599,21 +947,20 @@ int main() {
     if (command == 0) {
       return 0;
     }
-    if ((command == 3 || command == 4) && !has_command2) {
-      std::cout << "\n### Execute command 2 first! ###" << std::endl << std::endl;
+    if ((command == 2 || command == 3) && !has_command1) {
+      std::cout << "### Execute command 1 to load a maze! ###" << std::endl << std::endl;
       Start();
       continue;
     }
-
     if (command == 1) {
-      task1();
+      task1(filename);
+      has_command1 = true;
     } else if (command == 2) {
-      task2();
-      has_command2 = true;
+      task2(filename);
     } else if (command == 3) {
-      //task3(filename);
+      task3(filename);
     } else if (command == 4) {
-      //task4();
+      task4();
     }
     Start();
   }
